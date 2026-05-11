@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Sorcerer: The Pyroclast Depths</title>
+    <link rel="stylesheet" href="../GameCSS/java.css">
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop id="bg-video">
+            <source src="../Video/lava.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div id="feedback-box" class="hidden">
+        <h2 style="color: #ff3333; margin-top: 0; font-family: 'Courier New', Courier, monospace;">⚠️ COMPILATION ERROR</h2>
+        <div id="ai-comment"></div>
+        <div id="explanation-text"></div>
+        <button id="close-feedback-btn" class="choice-btn" style="margin-top: 20px; border-color: #ff3333; color: #ff3333;">Acknowledge</button>
+    </div>
+
+    <div id="game-container">
+        <div id="hud" class="hidden">
+            <div class="stat">Battery: <span id="battery" style="color: #00ffcc;">100</span>%</div>
+            <div class="stat">Fragments: <span id="chipsets" style="color: #ff9800;">1</span>/15</div>
+            <div class="stat">Sync Rate: <span id="win-rate">50</span>%</div>
+            <div class="stat">Location: <span id="current-location">Loading...</span></div>
+        </div>
+
+        <div id="dialogue-box">
+            <div id="npc-header">
+                <span id="npc-emoji">⚠️</span> 
+                <span id="npc-name">SYSTEM ALERT</span>
+            </div>
+            <div id="npc-text">Loading simulation data...</div>
+            <button id="proceed-btn">Proceed</button>
+        </div>
+
+        <div id="map-container" class="hidden">
+            <h3 id="map-label" style="margin: 0 0 10px 0; font-size: 1em;">Dungeon Progress</h3>
+            <div id="room-tracker">
+                </div>
+        </div>
+
+        <div id="action-area" class="hidden">
+            <div id="tips-bar">Tip: Always check your syntax before executing!</div>
+
+            <div id="in-game-dialogue" class="character-prompt"></div>
+            <p id="challenge-text"></p>
+            <div id="code-window"></div>
+            <div id="options-grid"></div>
+            
+            <button id="hint-btn">💡 Request Hint (-5 Battery)</button>
+        </div>
+    </div>
+
+    <script>
+    const characters = {
+        system: { name: "SYSTEM", emoji: "⚠️", color: "#ff3333" },
+        player: { name: "Player", emoji: "👤", color: "#ffffff" },
+        wizard: { name: "Arch-Mage Polles", emoji: "🧙‍♂️", color: "#ff9800" },
+        enemy: { name: "Advanced Corruption", emoji: "🔥", color: "#f44336" }
+    };
+
+    const game = {
+        gameState: "intro", 
+        storyStep: 0,
+        battery: 100,
+        chipsets: 1, // Start with 1 fragment from previous dungeon
+        winRate: 50,
+        currentRoomIndex: 0,
+        currentQuestionIndex: 0,
+        
+        // Dynamic Arrays for Java
+        aiTaunts: [
+            "NullPointerException: Your logic was not found.",
+            "Did you forget that Java is strictly typed?",
+            "The JVM is rejecting your syntax.",
+            "Even a corrupted file processes better than you.",
+            "Your integration level is pitiful."
+        ],
+        tips: [
+            "Tip: Java is case-sensitive! 'String' is not the same as 'string'.",
+            "Tip: Arrays in Java always start counting from index 0.",
+            "Tip: Use System.out.print() or System.out.println() for output.",
+            "Tip: Keep an eye on your battery! Wrong answers drain it heavily."
+        ],
+
+        introScript: [
+            { char: "player", text: "The dungeon didn’t collapse when I defeated its core. It rewrote itself." },
+            { char: "player", text: "For a moment, everything froze—the enemies, the walls, even the air. Then, like a corrupted file being forced shut, the entire dungeon shattered into fragments of light." },
+            { char: "system", text: "[DUNGEON CLEARED]\n[FRAGMENT ACQUIRED: 1/??]" },
+            { char: "player", text: "I dropped to one knee, breathing hard. The last enemy—a twisted mass of broken code and jagged polygons—had dissolved the second I struck its weak point. 'I… did it,' I muttered." },
+            { char: "wizard", text: "'Correction,' the wizard said, floating nearby. 'We executed a successful operation.'" },
+            { char: "player", text: "'Yeah, yeah…' I wiped sweat from my forehead. 'So… that’s one step closer to going home, right?'" },
+            { char: "wizard", text: "The wizard didn’t answer immediately. Instead, it extended its hand. The fragment I had just earned lifted from my palm and floated between us." },
+            { char: "player", text: "It pulsed. Once. Twice. Then—It sank into my chest. I staggered. 'What—what was that?!'" },
+            { char: "wizard", text: "'Integration,' the wizard said calmly. 'Fragments are not objects. They are permissions. Each one restores a portion of the system… and enhances your compatibility with it.'" },
+            { char: "player", text: "'That didn’t feel like an enhancement,' I snapped. 'It felt like something just… installed itself inside me.'" },
+            { char: "wizard", text: "'Accurate.'" },
+            { char: "player", text: "'…That’s not comforting.'" }
+        ],
+
+        mapIntroScript: [
+            { char: "player", text: "Before I could argue further, the ground beneath us shifted again. But this time, it wasn’t breaking. It was… loading." },
+            { char: "system", text: "The ruins of the dungeon dissolved into a grid, then reassembled into something new. A map unfolded in the air—glowing lines tracing paths across the world." },
+            { char: "player", text: "Most areas were dark. Locked. Corrupted. But one region ignited in burning red. A jagged landmass. Cracked terrain. Rivers of flowing magma. Even from the projection alone, I could almost feel the heat." },
+            { char: "wizard", text: "'Next destination,' the wizard announced. 'The Pyroclast Depths.'" },
+            { char: "player", text: "'Let me guess,' I said. 'Another dungeon.'" },
+            { char: "wizard", text: "'Correct.'" },
+            { char: "player", text: "'And it’s worse than the last one.'" },
+            { char: "wizard", text: "'Significantly.' The map zoomed in. Creatures began to appear within the volcanic region—outlined in flickering red code. Larger. Faster. More unstable." },
+            { char: "wizard", text: "'These enemies are advanced corruption types,' the wizard explained. 'They do not follow standard logic patterns. They will not behave predictably.'" },
+            { char: "player", text: "'Great,' I sighed. 'Love that.'" }
+        ],
+
+        rooms: [
+            {
+                roomName: "Sector 1: The Magma Gates",
+                transitionStory: [
+                    { char: "player", text: "Then I noticed something else. At the center of the volcano… was a massive signal. Pulsing. Alive. Stronger than anything I’d seen before." },
+                    { char: "player", text: "'…That’s the boss, isn’t it?'" },
+                    { char: "wizard", text: "The wizard hesitated. 'For this region, yes.'" },
+                    { char: "player", text: "'For this region?' I repeated. 'How many of these things are there?'" },
+                    { char: "wizard", text: "'…Unknown.'" }
+                ],
+                questions: [
+                    { char: "wizard", dialogue: "Initialize a primitive variable to track the lava heat.", q: "Which Java data type stores whole numbers?", code: "____ heat = 5000;", options: ["float", "int", "String", "boolean"], a: "int", hint: "It stands for integer.", exp: "The 'int' data type is used specifically for whole numbers in Java." },
+                    { char: "wizard", dialogue: "Now output the heat level to our console.", q: "What method prints output with a new line in Java?", code: "System.out.____(heat);", options: ["print", "log", "println", "write"], a: "println", hint: "Print + Line.", exp: "System.out.println() prints the passed variable and appends a new line." },
+                    { char: "enemy", dialogue: "Your syntax will burn!", q: "What must every Java statement end with?", code: "int x = 5__", options: [":", ".", ";", "}"], a: ";", hint: "It separates statements.", exp: "In Java, almost all statements must be terminated with a semicolon (;)." }
+                ]
+            },
+            {
+                roomName: "Sector 2: Volcanic Arrays",
+                transitionStory: [
+                    { char: "player", text: "A low rumble echoed in the distance. Not from the world around us— But from above. The sky flickered again, worse than before. The glitching pixels twisted, forming something that almost looked like an eye." },
+                    { char: "player", text: "Watching. Tracking. Me." },
+                    { char: "system", text: "[SYSTEM ALERT]\n[USER INTEGRATION LEVEL INCREASED]\n[CORRUPTION RESPONSE… ESCALATING]" }
+                ],
+                questions: [
+                    { char: "wizard", dialogue: "Grab the first cooled rock from the array!", q: "Arrays are zero-indexed. Access the first item:", code: "String r = rocks[____];", options: ["1", "0", "first", "null"], a: "0", hint: "Counting in arrays doesn't start at 1.", exp: "Arrays in Java are zero-indexed, meaning the first element is at position 0." },
+                    { char: "wizard", dialogue: "We need the length of the corruption string.", q: "Which method finds the length of a String in Java?", code: "int len = enemyData.____();", options: ["length", "size", "count", "len"], a: "length", hint: "It's a full word, not an abbreviation.", exp: "The .length() method returns the number of characters in a Java String." },
+                    { char: "enemy", dialogue: "You cannot allocate enough memory to survive!", q: "Which keyword creates a new object or array?", code: "int[] arr = ____ int;", options: ["create", "alloc", "make", "new"], a: "new", hint: "Think of creating something 'new'.", exp: "The 'new' keyword is used to allocate memory for a new object or array." }
+                ]
+            },
+            {
+                roomName: "Sector 3: The Cracked Path",
+                transitionStory: [
+                    { char: "player", text: "I clenched my fists. 'Okay,' I said. 'Then we don’t wait. We go now, finish this next dungeon, grab the fragment, and get me out of here.'" },
+                    { char: "wizard", text: "The wizard floated closer. 'You are adapting quickly.'" },
+                    { char: "player", text: "'I don’t really have a choice.'" },
+                    { char: "wizard", text: "'…No,' it said quietly. 'You don’t.'" }
+                ],
+                questions: [
+                    { char: "enemy", dialogue: "Both conditions must be met to cross the lava!", q: "What is the logical 'AND' operator in Java?", code: "if (isHot ____ isLava)", options: ["||", "&&", "==", "!="], a: "&&", hint: "Two ampersands.", exp: "&& requires both the left AND right condition to evaluate to true." },
+                    { char: "enemy", dialogue: "Or perhaps only ONE condition is needed to burn?", q: "What is the logical 'OR' operator in Java?", code: "if (hasShield ____ isImmune)", options: ["||", "&&", "==", "!!"], a: "||", hint: "Two vertical pipes.", exp: "|| requires only one of the conditions to evaluate to true." },
+                    { char: "wizard", dialogue: "Invert the enemy's logic to pass!", q: "What is the logical 'NOT' operator?", code: "if (____isBurning)", options: ["!", "?", "~", "-"], a: "!", hint: "An exclamation mark.", exp: "The ! operator reverses the boolean value (true becomes false, and vice versa)." }
+                ]
+            },
+            {
+                roomName: "Sector 4: The Magma Loop",
+                transitionStory: [
+                    { char: "player", text: "As the world around us finalized its transformation, the heat hit me first. Dry. Burning. Relentless." },
+                    { char: "system", text: "The ground cracked beneath your feet as you stepped into the new zone. Lava flowed like glowing veins through the land, casting everything in a violent orange light." }
+                ],
+                questions: [
+                    { char: "wizard", dialogue: "We need to run this cooling protocol 5 times.", q: "Which loop runs a specific number of times?", code: "____(int i = 0; i < 5; i++)", options: ["while", "do", "for", "loop"], a: "for", hint: "Three letters, standard counting loop.", exp: "A 'for' loop is best when you know exactly how many times you want to iterate." },
+                    { char: "wizard", dialogue: "Keep shielding while the heat is above zero!", q: "Which loop runs continuously while a condition is true?", code: "____(heat > 0)", options: ["while", "for", "if", "continue"], a: "while", hint: "Think of the English word for 'during the time that'.", exp: "'while' loops execute as long as the specified boolean condition evaluates to true." },
+                    { char: "enemy", dialogue: "You are stuck in my infinite loop of fire!", q: "How do you forcefully exit a loop in Java?", code: "____;", options: ["exit", "break", "stop", "return"], a: "break", hint: "You want to 'break' out of it.", exp: "The 'break' statement immediately terminates the loop it is currently inside." }
+                ]
+            },
+            {
+                roomName: "Sector 5: The Pyroclast Core",
+                transitionStory: [
+                    { char: "player", text: "In the distance— Something moved inside the magma. Something huge. I swallowed. 'Tell me one thing,' I said, not taking my eyes off the volcano. 'After this dungeon… how many more?'" },
+                    { char: "wizard", text: "The wizard looked at me. Then, for the first time— Its glowing face dimmed. 'As many as it takes… to separate you from the system.'" },
+                    { char: "player", text: "That pulse hit me again. Stronger this time. Not just in my chest— But in my thoughts. Like something was syncing. Learning. Growing." },
+                    { char: "system", text: "And deep within the volcano… Something answered." }
+                ],
+                questions: [
+                    { char: "wizard", dialogue: "Declare a method to strike the core without returning data!", q: "Which keyword means a method does not return a value?", code: "public ____ strike() { }", options: ["null", "void", "empty", "static"], a: "void", hint: "It means an empty space.", exp: "The 'void' keyword signifies that the method will not return any data." },
+                    { char: "enemy", dialogue: "I am the executioner of this program!", q: "What is the main entry method where Java programs start?", code: "public static void ____(String[] args)", options: ["start", "init", "main", "run"], a: "main", hint: "It is the 'main' entry point.", exp: "Every standalone Java application must have a main() method to execute." },
+                    { char: "wizard", dialogue: "Target the core's instance directly!", q: "Which keyword refers to the current object in Java?", code: "____.health = 0;", options: ["self", "this", "super", "object"], a: "this", hint: "Refers to 'this' exact instance.", exp: "The 'this' keyword is a reference variable in Java that refers to the current object." }
+                ]
+            }
+        ],
+
+        init() {
+            document.getElementById("proceed-btn").addEventListener("click", () => this.handleProceed());
+            
+            // Setup Feedback Close Button
+            document.getElementById("close-feedback-btn").addEventListener("click", () => {
+                document.getElementById("feedback-box").classList.add("hidden");
+                // End game check if battery died after mistake
+                if (this.battery <= 0) {
+                    alert("Battery Depleted. INTEGRATION FAILED. GAME OVER.");
+                    location.reload();
+                }
+            });
+
+            // Setup Hint Button
+            document.getElementById("hint-btn").addEventListener("click", () => {
+                const qData = this.rooms[this.currentRoomIndex].questions[this.currentQuestionIndex];
+                if(this.battery > 5) {
+                    this.battery -= 5;
+                    this.updateHUD();
+                    alert(`HINT: ${qData.hint}`);
+                } else {
+                    alert("Not enough battery to use a hint!");
+                }
+            });
+
+            this.currentStoryBlock = this.introScript;
+            this.renderDialogue();
+        },
+
+        renderDialogue() {
+    const line = this.currentStoryBlock[this.storyStep];
+    const charData = characters[line.char];
+
+    const npcText = document.getElementById("npc-text");
+    const proceedBtn = document.getElementById("proceed-btn");
+
+    // Character Info
+    document.getElementById("npc-emoji").innerText = charData.emoji;
+    document.getElementById("npc-name").innerText = charData.name;
+    document.getElementById("npc-name").style.color = charData.color;
+
+    // Reset
+    npcText.innerHTML = "";
+
+    let text = line.text;
+    let index = 0;
+
+    // NEW: typing state
+    this.isTyping = true;
+
+    // Clear old typing interval if exists
+    clearInterval(this.typingInterval);
+
+    // Typing animation
+    this.typingInterval = setInterval(() => {
+
+        if (index < text.length) {
+
+            if (text[index] === "\n") {
+                npcText.innerHTML += "<br>";
+            } else {
+                npcText.innerHTML += text[index];
+            }
+
+            index++;
+
+        } else {
+
+            clearInterval(this.typingInterval);
+
+            this.isTyping = false;
+        }
+
+    }, 25);
+
+    // NEW: Proceed button behavior
+    proceedBtn.onclick = () => {
+
+        // If still typing → instantly complete text
+        if (this.isTyping) {
+
+            clearInterval(this.typingInterval);
+
+            npcText.innerHTML = text.replace(/\n/g, "<br>");
+
+            this.isTyping = false;
+
+        } else {
+
+            // Continue normally
+            this.handleProceed();
+        }
+    };
+},
+
+        handleProceed() {
+            this.storyStep++;
+            if (this.storyStep < this.currentStoryBlock.length) {
+                this.renderDialogue();
+            } else {
+                if (this.gameState === "intro") {
+                    this.gameState = "map-intro";
+                    this.storyStep = 0;
+                    this.currentStoryBlock = this.mapIntroScript;
+                    this.renderDialogue();
+                } else if (this.gameState === "map-intro" || this.gameState === "story") {
+                    if (this.currentRoomIndex >= this.rooms.length) {
+                        this.transitionToNextLocation();
+                    } else {
+                        this.launchGameplay();
+                    }
+                }
+            }
+        },
+
+        launchGameplay() {
+            this.gameState = "playing";
+            document.getElementById("dialogue-box").classList.add("hidden");
+            document.getElementById("hud").classList.remove("hidden");
+            document.getElementById("map-container").classList.remove("hidden");
+            document.getElementById("action-area").classList.remove("hidden");
+            this.updateHUD();
+            this.loadQuestion();
+        },
+
+        updateMap() {
+            const tracker = document.getElementById("room-tracker");
+            tracker.innerHTML = "";
+            this.rooms.forEach((room, index) => {
+                const box = document.createElement("div");
+                box.className = "room";
+                if (index < this.currentRoomIndex) box.classList.add("completed");
+                else if (index === this.currentRoomIndex) box.classList.add("active");
+                box.innerText = index + 1;
+                tracker.appendChild(box);
+            });
+        },
+
+        updateHUD() {
+            document.getElementById("battery").innerText = this.battery;
+            document.getElementById("win-rate").innerText = this.winRate;
+            document.getElementById("chipsets").innerText = this.chipsets;
+            if(this.currentRoomIndex < this.rooms.length) {
+                document.getElementById("current-location").innerText = this.rooms[this.currentRoomIndex].roomName;
+            }
+        },
+
+        loadQuestion() {
+            this.updateMap();
+            
+            // Random Tip Generator
+            const randomTip = this.tips[Math.floor(Math.random() * this.tips.length)];
+            document.getElementById("tips-bar").innerText = randomTip;
+
+            const room = this.rooms[this.currentRoomIndex];
+            const qData = room.questions[this.currentQuestionIndex];
+            const charData = characters[qData.char];
+
+            const actionArea = document.getElementById("action-area");
+            actionArea.classList.remove("fade-in");
+            void actionArea.offsetWidth; // Trigger reflow
+            actionArea.classList.add("fade-in");
+
+            document.getElementById("in-game-dialogue").innerHTML = `
+                <span style="font-size: 1.5em;">${charData.emoji}</span> 
+                <strong style="color:${charData.color}">${charData.name}:</strong> 
+                "${qData.dialogue}"
+            `;
+
+            document.getElementById("challenge-text").innerText = `Question ${this.currentQuestionIndex + 1}/3: ${qData.q}`;
+            document.getElementById("code-window").innerHTML = `<code>${qData.code}</code>`;
+            
+            const grid = document.getElementById("options-grid");
+            grid.innerHTML = "";
+            qData.options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "choice-btn";
+                btn.innerText = opt;
+                btn.onclick = () => this.checkAnswer(opt, qData);
+                grid.appendChild(btn);
+            });
+        },
+
+        checkAnswer(selected, qData) {
+            if (selected === qData.a) {
+                // Correct logic
+                this.winRate = Math.min(100, this.winRate + 5); 
+                this.chipsets++; // Reward Chips!
+                
+                // Random Power-Up Chance
+                if(Math.random() > 0.8 && this.battery < 100) {
+                    this.battery = Math.min(100, this.battery + 10);
+                    alert("🔋 DATA FRAGMENT FOUND! Battery restored +10.");
+                }
+
+                this.currentQuestionIndex++;
+                if (this.currentQuestionIndex >= 3) {
+                    this.currentRoomIndex++;
+                    this.currentQuestionIndex = 0;
+                    this.triggerRoomTransition();
+                } else {
+                    this.updateHUD();
+                    this.loadQuestion();
+                }
+            } else {
+                // Incorrect Logic (Enemy Taunt + Shake)
+                this.winRate = Math.max(0, this.winRate - 10); 
+                this.battery -= 15;
+                
+                // Trigger Shake Effect
+                const container = document.getElementById("game-container");
+                container.classList.remove("shake");
+                void container.offsetWidth; 
+                container.classList.add("shake");
+
+                // Show Enemy Taunt Modal
+                const randomTaunt = this.aiTaunts[Math.floor(Math.random() * this.aiTaunts.length)];
+                document.getElementById("ai-comment").innerText = `"${randomTaunt}"`;
+                document.getElementById("explanation-text").innerText = `Explanation: ${qData.exp}`;
+                document.getElementById("feedback-box").classList.remove("hidden");
+                
+                this.updateHUD();
+            }
+        },
+
+        triggerRoomTransition() {
+            document.getElementById("action-area").classList.add("hidden");
+            
+            const diag = document.getElementById("dialogue-box");
+            diag.classList.remove("hidden");
+
+            this.gameState = "story";
+            this.storyStep = 0;
+            
+            if (this.currentRoomIndex >= this.rooms.length) {
+                // After final boss
+                this.currentStoryBlock = [
+                    { char: "system", text: "[DUNGEON CLEARED]\n[FRAGMENT ACQUIRED: 2/??]" },
+                    { char: "wizard", text: "The wizard floated down. The core is destroyed. Prepare for the next integration." }
+                ];
+            } else {
+                this.currentStoryBlock = this.rooms[this.currentRoomIndex].transitionStory;
+            }
+            
+            this.renderDialogue();
+        },
+
+        transitionToNextLocation() {
+            const requiredChips = 16; // Started with 1, +15 from questions
+            const requiredBattery = 30;
+
+            document.getElementById("npc-emoji").innerText = "🌋";
+            document.getElementById("npc-name").innerText = "SYSTEM EVALUATION";
+            document.getElementById("npc-name").style.color = "#ff9800";
+
+            const btn = document.getElementById("proceed-btn");
+
+            if (this.chipsets >= requiredChips && this.battery >= requiredBattery) {
+                document.getElementById("npc-text").innerHTML = `Requirements Met.<br>Fragments: ${this.chipsets}/${requiredChips} | Battery: ${this.battery}%<br>The Pyroclast Depths Cleared. Syncing next sector...`;
+                btn.innerText = "Enter Next Zone";
+                btn.onclick = () => {
+                    window.location.href = "../Lessons Pages/lesson-html.html"; 
+                };
+            } else {
+                document.getElementById("npc-text").innerHTML = `<span style="color:#ff3333">SYNC FAILED.</span><br>You need ${requiredChips} Fragments and at least ${requiredBattery}% Battery to proceed.<br>Your Stats -> Fragments: ${this.chipsets} | Battery: ${this.battery}%<br>The corruption consumes you...`;
+                btn.innerText = "Reboot Sector";
+                btn.onclick = () => {
+                    location.reload(); 
+                };
+            }
+        }
+    };
+
+    window.onload = () => game.init();
+    </script>
+</body>
+</html>

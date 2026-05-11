@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Fundamentals</title>
+    <link rel="stylesheet" href="../Lesson Styling/lesson-java.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Press+Start+2P&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo"><h3>CODE AND PLAY // JAVA FUNDAMENTALS</h3></div>
+            <ul>
+                <li><a href="#intro">Intro</a></li>
+                <li><a href="#syntax">Syntax</a></li>
+                <li><a href="#variables">Variables</a></li>
+                <li><a href="#control">Control Flow</a></li>
+                <li><a href="#methods">Methods</a></li>
+                <li><a href="#arrays">Arrays & Strings</a></li>
+                <li><a href="#references">References</a></li>
+                <li><a href="#classes">Classes</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero contents" id="intro">
+            <h1>Master Java</h1>
+            <p class="subtitle">You must first understand the fundamentals of Java before diving into the storyline.</p>
+        </section>
+
+        <!-- Topic 1: Syntax -->
+        <section class="container lesson-section" id="syntax">
+            <h2 class="section-title">1. The Basic Boilerplate</h2>
+            <p class="section-subtitle">Every Java program is built inside a class and requires a main method to run. Here is the classic "Hello World".</p>
+            
+            <div class="code-card">
+<pre><code>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>public class Main</h3>
+                    <p>Every line of code that runs in Java must be inside a class. The class name should generally match the filename.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>main(String[] args)</h3>
+                    <p>The main method is the entry point of your program. Execution always starts from here.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>System.out.println()</h3>
+                    <p>The standard command to print text to the console. It prints the text and moves the cursor to a new line.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 2: Variables & Data Types -->
+        <section class="container lesson-section" id="variables">
+            <h2 class="section-title">2. Variables & Data Types</h2>
+            <p class="section-subtitle">Java is strongly typed, meaning you must declare the type of a variable before using it to store data.</p>
+            
+            <div class="code-card">
+<pre><code>int level = 5;               // Integer (whole numbers)
+double health = 99.5;        // Double (floating-point numbers)
+char rank = 'A';             // Character (single letter)
+boolean isGameOver = false;  // Boolean (true or false)</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Numeric Types</h3>
+                    <p>Use <code>int</code> for standard whole numbers and <code>double</code> or <code>float</code> when you need decimal precision.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>char</h3>
+                    <p>Stores a single character. It is always surrounded by single quotes (e.g., <code>'Z'</code>).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>boolean</h3>
+                    <p>Represents a boolean truth value. It can only evaluate to <code>true</code> or <code>false</code>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 3: Control Flow -->
+        <section class="container lesson-section" id="control">
+            <h2 class="section-title">3. Control Flow</h2>
+            <p class="section-subtitle">Direct the logic of your program using conditional statements and loops.</p>
+            
+            <div class="code-card">
+<pre><code>int score = 85;
+
+// Conditional Statement
+if (score >= 90) {
+    System.out.println("Excellent!");
+} else if (score >= 75) {
+    System.out.println("Passed!");
+} else {
+    System.out.println("Keep trying!");
+}
+
+// Loop Statement
+for (int i = 1; i <= 3; i++) {
+    System.out.println("Spawning enemy " + i);
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>if / else if / else</h3>
+                    <p>Allows your program to make decisions and execute different blocks of code based on whether a condition is true or false.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>for loop</h3>
+                    <p>Used to repeat a specific block of code a known number of times. Contains an initialization, a condition, and an increment.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>while loop</h3>
+                    <p>Repeats a block of code as long as a specified condition remains true. Useful when the number of iterations is unknown.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 4: Methods -->
+        <section class="container lesson-section" id="methods">
+            <h2 class="section-title">4. Methods</h2>
+            <p class="section-subtitle">Reusable blocks of code designed to perform a specific task. In Java, functions are called methods and belong to classes.</p>
+            
+            <div class="code-card">
+<pre><code>// Method Declaration
+public static int addNumbers(int a, int b) {
+    return a + b;
+}
+
+public static void main(String[] args) {
+    // Method Call
+    int result = addNumbers(10, 5);
+    System.out.println("The sum is: " + result);
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Return Type</h3>
+                    <p>Specifies what type of data the method sends back (e.g., <code>int</code>, <code>String</code>). Use <code>void</code> if it returns nothing.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Parameters</h3>
+                    <p>Variables passed into the method (like <code>int a, int b</code>) so it has the data it needs to operate.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 5: Arrays & Strings -->
+        <section class="container lesson-section" id="arrays">
+            <h2 class="section-title">5. Arrays & Strings</h2>
+            <p class="section-subtitle">Store multiple items of the same data type sequentially, or handle text efficiently using the built-in String class.</p>
+            
+            <div class="code-card">
+<pre><code>// Array of integers
+int[] nums = {10, 20, 30, 40, 50};
+System.out.println("First number: " + nums[0]); // Outputs 10
+
+// String manipulation
+String text = "Java Programming";
+System.out.println("Length: " + text.length());</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Arrays</h3>
+                    <p>A fixed-size sequence of elements of the same type. Accessed using a zero-based index (e.g., <code>nums[0]</code>).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Strings</h3>
+                    <p>Unlike basic types, <code>String</code> is an object in Java. It includes helpful built-in methods like <code>.length()</code> and <code>.toUpperCase()</code>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 6: References -->
+        <section class="container lesson-section" id="references">
+            <h2 class="section-title">6. Object References</h2>
+            <p class="section-subtitle">Java doesn't use explicit pointers. Instead, variables holding objects actually hold a "reference" (a memory address) to that object.</p>
+            
+            <div class="code-card">
+<pre><code>Player p1 = new Player();
+p1.hp = 100;
+
+// p2 now points to the exact same object in memory as p1
+Player p2 = p1; 
+
+p2.hp = 50; 
+
+// Outputs 50, because p1 and p2 modify the same object!
+System.out.println("P1 HP: " + p1.hp); </code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Primitive vs Reference</h3>
+                    <p>Primitive types (like <code>int</code>) store actual values. Reference types (like Objects) store a memory address pointing to the data.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Pass by Value</h3>
+                    <p>Java is strictly pass-by-value, but when you pass an object to a method, you are passing the *value of the reference*.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Garbage Collection</h3>
+                    <p>When an object no longer has any references pointing to it, Java automatically deletes it from memory.</p>
+                </div>
+            </div>
+        </section>
+
+<!-- Topic 7: Classes -->
+<section class="container lesson-section" id="classes">
+
+    <h2 class="section-title">7. Classes & Objects</h2>
+
+    <p class="section-subtitle">
+        Java is Object-Oriented. Classes act as blueprints to group related variables (fields) and methods together into one custom data type.
+    </p>
+
+    <div class="code-card">
+<pre><code>// Define a class
+class Player {
+    String name;
+    int hp;
+    int level;
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create a new player object using 'new'
+        Player hero = new Player();
+
+        hero.name = "Knight";
+        hero.hp = 100;
+        hero.level = 5;
+
+        System.out.println("Hero Name: " + hero.name);
+        System.out.println("Hero HP: " + hero.hp);
+    }
+}</code></pre>
+    </div>
+
+    <div class="features-grid">
+
+        <div class="feature-card">
+            <h3>Class</h3>
+            <p>
+                A blueprint for creating objects. It defines the state (variables) and behavior (methods) the object will have.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>The 'new' Keyword</h3>
+            <p>
+                Used to dynamically allocate memory and instantiate a brand-new object from a class definition.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Dot Operator</h3>
+            <p>
+                Use the dot operator to access fields and methods belonging to an object, like <code>hero.hp</code>.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- Quiz Section -->
+        <section class="quiz-container" id="quiz">
+            <h2>Knowledge Check</h2>
+            <p class="subtitle">Test your understanding of Java basics and object-oriented concepts.</p>
+            
+            <div class="quiz-card">
+                <form id="javaQuiz">
+                    <!-- Question 1 -->
+                    <div class="question-block">
+                        <p class="question-text">1. What is the entry point method of a Java program?</p>
+                        <label><input type="radio" name="q1" value="a"> start()</label>
+                        <label><input type="radio" name="q1" value="b"> init()</label>
+                        <label><input type="radio" name="q1" value="c"> main()</label>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-block">
+                        <p class="question-text">2. Which statement is used to print text to the screen in Java?</p>
+                        <label><input type="radio" name="q2" value="a"> System.out.println()</label>
+                        <label><input type="radio" name="q2" value="b"> console.log()</label>
+                        <label><input type="radio" name="q2" value="c"> std::cout &lt;&lt;</label>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-block">
+                        <p class="question-text">3. Which keyword is used to create and allocate memory for a new object?</p>
+                        <label><input type="radio" name="q3" value="a"> object</label>
+                        <label><input type="radio" name="q3" value="b"> new</label>
+                        <label><input type="radio" name="q3" value="c"> create</label>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-block">
+                        <p class="question-text">4. What is the correct data type for storing text in Java?</p>
+                        <label><input type="radio" name="q4" value="a"> String</label>
+                        <label><input type="radio" name="q4" value="b"> text</label>
+                        <label><input type="radio" name="q4" value="c"> char</label>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-block">
+                        <p class="question-text">5. Which keyword is used to define a custom blueprint (type) in Java?</p>
+                        <label><input type="radio" name="q5" value="a"> class</label>
+                        <label><input type="radio" name="q5" value="b"> struct</label>
+                        <label><input type="radio" name="q5" value="c"> construct</label>
+                    </div>
+
+                    <button type="button" class="btn" onclick="checkQuiz()">Submit Answers</button>
+                    
+                    <div id="quizResult" class="result-message"></div>
+                    <!-- Proceed Section -->
+<div class="proceed-area">
+
+    <button 
+    type="button" 
+    id="proceedBtn" 
+    class="proceed-btn locked"
+    onclick="proceedToGame()">
+    Proceed To Game
+    </button>
+
+    <p id="requirementMessage" class="requirement-message"></p>
+
+</div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Java Academy. Built for learning.</p>
+    </footer>
+
+    <!-- Script to grade the updated quiz -->
+    <script>
+
+    let lessonCompleted = false;
+    let passedQuiz = false;
+
+    // Detect if user scrolled through the lesson
+    window.addEventListener("scroll", () => {
+
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.body.offsetHeight - 200;
+
+        if (scrollPosition >= pageHeight) {
+            lessonCompleted = true;
+        }
+    });
+
+function checkQuiz() {
+
+    const form = document.getElementById('javaQuiz');
+    const resultDiv = document.getElementById('quizResult');
+
+    let score = 0;
+
+    // Correct answers for Java Quiz
+    const answers = {
+        q1: 'c', // main()
+        q2: 'a', // System.out.println()
+        q3: 'b', // new
+        q4: 'a', // String
+        q5: 'a'  // class
+    };
+
+    // Check answers
+    if (form.q1.value === answers.q1) score++;
+    if (form.q2.value === answers.q2) score++;
+    if (form.q3.value === answers.q3) score++;
+    if (form.q4.value === answers.q4) score++;
+    if (form.q5.value === answers.q5) score++;
+
+    // PERFECT SCORE
+    if (score === 5) {
+
+        passedQuiz = true;
+
+        const proceedBtn = document.getElementById("proceedBtn");
+
+        // Unlock button if lesson was studied
+        if (passedQuiz) {
+            proceedBtn.classList.remove("locked");
+            proceedBtn.classList.add("unlocked");
+        }
+
+        resultDiv.style.color = "#76ffa9";
+        resultDiv.innerHTML = "Perfect score! 5/5.";
+
+    }
+
+    // FAILED QUIZ
+    else {
+
+        passedQuiz = false;
+
+        resultDiv.style.color = "#ff5555";
+
+        resultDiv.innerHTML =
+            `FAILED. You scored ${score}/5. Please review the lesson and try again.<br>
+            Restarting lesson... `;
+
+        resultDiv.style.display = "block";
+
+        // Restart lesson from the top after 3 seconds (set to 1 sec in code)
+        setTimeout(() => {
+
+            // Clear quiz selections
+            form.reset();
+
+            // Reset progress
+            passedQuiz = false;
+            lessonCompleted = false;
+
+            // Clear messages
+            resultDiv.innerHTML = "";
+            resultDiv.style.display = "none";
+
+            document.getElementById("requirementMessage").innerHTML = "";
+
+            // Lock button again
+            const proceedBtn = document.getElementById("proceedBtn");
+
+            proceedBtn.classList.remove("unlocked");
+            proceedBtn.classList.add("locked");
+
+            // Scroll back to top
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }, 1000);
+
+        return;
+    }
+
+    resultDiv.style.display = "block";
+}
+
+    function proceedToGame() {
+
+        const requirementMessage = document.getElementById("requirementMessage");
+
+        // REQUIREMENTS COMPLETE
+        if (passedQuiz) {
+            // Updated to point to Java game logic
+            window.location.href = "../GamePages/java.html";
+        }
+
+        // QUIZ NOT PASSED
+        else if (!passedQuiz) {
+            requirementMessage.style.color = "#ff8b56";
+            requirementMessage.innerHTML =
+                "⚠ You must first complete the lesson to proceed to the storyline.";
+        }
+    }
+
+</script>
+</body>
+</html>

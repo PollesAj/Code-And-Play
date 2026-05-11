@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markup Sorcerer: Luminous Fracture</title>
+    <link rel="stylesheet" href="../GameCSS/htnl.css">
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop id="bg-video">
+            <source src="../Video/Crystal.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div id="feedback-box" class="hidden">
+        <h2 style="color: #ff3333; margin-top: 0; font-family: 'Courier New', Courier, monospace;">⚠️ SYNTAX ERROR</h2>
+        <div id="ai-comment"></div>
+        <div id="explanation-text"></div>
+        <button id="close-feedback-btn" class="choice-btn" style="margin-top: 20px; border-color: #ff3333; color: #ff3333;">Acknowledge</button>
+    </div>
+
+    <div id="game-container">
+        <div id="hud" class="hidden">
+            <div class="stat">Sync: <span id="sync" style="color: #e040fb;">42</span>%</div>
+            <div class="stat">Fragments: <span id="chipsets" style="color: #00e5ff;">0</span>/15</div>
+            <div class="stat">Stability: <span id="win-rate">50</span>%</div>
+            <div class="stat">Location: <span id="current-location">Luminous Fracture</span></div>
+        </div>
+
+        <div id="dialogue-box">
+            <div id="npc-header">
+                <span id="npc-emoji">⚠️</span>
+                <span id="npc-name">SYSTEM ALERT</span>
+            </div>
+            <div id="npc-text">CRITICAL ERROR. Unauthorized entity detected...</div>
+            <button id="proceed-btn">Proceed</button>
+        </div>
+
+        <div id="map-container" class="hidden">
+            <h3 id="map-label" style="margin: 0 0 10px 0; font-size: 1em; color: #e040fb;">Cavern Depth</h3>
+            <div id="room-tracker">
+                </div>
+        </div>
+
+        <div id="action-area" class="hidden">
+            <div id="tips-bar">Tip: HTML tags usually come in pairs: an opening tag and a closing tag!</div>
+
+            <div id="in-game-dialogue" class="character-prompt"></div>
+            <p id="challenge-text"></p>
+            <div id="code-window"></div>
+            <div id="options-grid"></div>
+            
+            <button id="hint-btn">💡 Request Hint (-5 Sync)</button>
+        </div>
+    </div>
+
+    <script>
+const characters = {
+    system: { name: "System", emoji: "⚠️", color: "#ff3333" },
+    player: { name: "Player", emoji: "👤", color: "#ffffff" },
+    wizard: { name: "Arch-Mage Polles", emoji: "🧙‍♂️", color: "#b388ff" },
+    mirror: { name: "Mirror Entity", emoji: "🪞", color: "#00e5ff" },
+    core: { name: "Unstable Core", emoji: "💠", color: "#e040fb" }
+};
+
+const game = {
+    gameState: "intro",
+    storyStep: 0,
+    sync: 42,
+    chipsets: 0,
+    winRate: 50,
+    currentRoomIndex: 0,
+    currentQuestionIndex: 0,
+    
+    // Arrays for dynamic elements
+    aiTaunts: [
+        "Your reflection is disappointed in you.",
+        "That tag doesn't even exist in this reality.",
+        "I saw you make that mistake before you even typed it.",
+        "Fractured logic. Try again.",
+        "You cannot structure a document with shattered glass."
+    ],
+    tips: [
+        "Tip: HTML stands for HyperText Markup Language.",
+        "Tip: Use < /> for self-closing tags like images and inputs.",
+        "Tip: Attributes provide additional information about HTML elements.",
+        "Tip: Your Sync is critical. Wrong answers will destabilize you."
+    ],
+
+    introScript: [
+        { char: "player", text: "The heat didn’t follow us. It vanished." },
+        { char: "player", text: "One step out of the volcanic wasteland—and the world snapped again. No transition. No warning. Just— Cold." },
+        { char: "player", text: "I gasped as the air shifted, sharp and thin. My breath fogged instantly, drifting in front of me like smoke." },
+        { char: "player", text: "The ground beneath my feet wasn’t cracked stone anymore. It was glass. No—crystal." }
+    ],
+
+    mapIntroScript: [
+        { char: "player", text: "Endless, jagged formations stretched in every direction, rising like frozen lightning. The walls shimmered with shifting colors—violet, cyan, deep blue—each surface reflecting too much." },
+        { char: "player", text: "Even the light felt wrong. It didn’t come from a single source. It came from everywhere." },
+        { char: "wizard", text: "“New region initialized.”" },
+        { char: "player", text: "Its voice echoed. Then echoed again. Delayed. Distorted. Like the cavern was repeating it. “Crystal… cavern?” I muttered." },
+        { char: "wizard", text: "“Designation: Luminous Fracture.”" },
+        { char: "player", text: "“…Of course it is.”" }
+    ],
+
+    rooms: [
+        {
+            roomName: "Sector 1: The Echoing Glass",
+            transitionStory: [
+                { char: "player", text: "I took a step forward. The sound didn’t match. Instead of a single footstep— There were three." },
+                { char: "player", text: "One immediate. One slightly delayed. One… not mine at all. I froze." },
+                { char: "player", text: "“…Did you hear that?”" },
+                { char: "wizard", text: "“Yes.”" },
+                { char: "player", text: "“…You’re not gonna explain it, are you?”" },
+                { char: "wizard", text: "“No.”" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "We must declare the structure of this reality.", q: "Which declaration tells the browser this is an HTML5 document?", code: "____", options: ["<doctype html>", "<!DOCTYPE html>", "<html>", "<?xml>"], a: "<!DOCTYPE html>", hint: "It requires an exclamation mark at the beginning.", exp: "<!DOCTYPE html> is the standard declaration for modern HTML5 documents." },
+                { char: "wizard", dialogue: "Now, encapsulate the entire environment.", q: "What is the root element of an HTML page?", code: "____", options: ["<body>", "<head>", "<html>", "<main>"], a: "<html>", hint: "It shares the name of the language itself.", exp: "The <html> element wraps all content on the entire page, acting as the root." },
+                { char: "mirror", dialogue: "I see your unseen thoughts.", q: "Which element contains metadata, title, and links, but is hidden from the page view?", code: "____", options: ["<header>", "<body>", "<meta>", "<head>"], a: "<head>", hint: "It sits right above the body.", exp: "The <head> element contains machine-readable information (metadata) about the document." }
+            ]
+        },
+        {
+            roomName: "Sector 2: Hall of Reflections",
+            transitionStory: [
+                { char: "player", text: "Deeper into the cavern, the crystals began to change. At first, they were just reflections. Then… they started showing things that weren’t there." },
+                { char: "player", text: "Myself, standing still… while I was moving. Myself, turning… before I actually did." },
+                { char: "player", text: "“Okay,” I said, voice tighter now. “I don’t like this one.”" },
+                { char: "wizard", text: "“Your discomfort is justified. This region is not purely corrupted. It is unstable.”" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "Create a prominent focal point for the reflection.", q: "What is the correct tag for the largest, most important heading?", code: "____Reflection____", options: ["<heading>", "<h1>", "<h6>", "<header>"], a: "<h1>", hint: "Heading 1 is the largest.", exp: "<h1> defines the most important heading on a page." },
+                { char: "wizard", dialogue: "Give form to the text floating in the glass.", q: "Which tag is used to define a standard paragraph of text?", code: "____This is a reflection.____", options: ["<p>", "<text>", "<para>", "<br>"], a: "<p>", hint: "Just the first letter of paragraph.", exp: "The <p> tag defines a paragraph." },
+                { char: "mirror", dialogue: "Make your words carry weight!", q: "Which tag is used to indicate text that has strong importance (usually rendered as bold)?", code: "____Danger!____", options: ["<b>", "<heavy>", "<strong>", "<bold>"], a: "<strong>", hint: "It implies the text is 'strong'.", exp: "<strong> defines text with strong importance, providing semantic meaning unlike the generic <b> tag." }
+            ]
+        },
+        {
+            roomName: "Sector 3: The Shattered Entity",
+            transitionStory: [
+                { char: "player", text: "A sharp crack split through the cavern. One of the crystals nearby fractured— Then moved." },
+                { char: "player", text: "It twisted unnaturally, reshaping itself into something humanoid—but wrong. Limbs too long. Its surface reflected everything around it… except its own form." },
+                { char: "mirror", text: "A Mirror Entity. It lunged." },
+                { char: "player", text: "I threw up a command, but I felt a second hit. From behind. I turned— Nothing. 'They don’t follow directional logic,' the wizard said. 'Attacks may originate from reflected positions.'" },
+                { char: "player", text: "“You could’ve led with that!” I snapped." }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "Redirect its attack to another location!", q: "Which tag is used to create a hyperlink?", code: "____ href='safezone.html'>Flee</a>", options: ["<link>", "<a>", "<href>", "<nav>"], a: "<a>", hint: "It stands for 'anchor'.", exp: "The <a> (anchor) tag defines a hyperlink, which is used to link from one page to another." },
+                { char: "mirror", dialogue: "Look at me! Look at what you are!", q: "Which tag is used to embed an image?", code: "____ src='reflection.png'>", options: ["<image>", "<picture>", "<img>", "<src>"], a: "<img>", hint: "A three-letter abbreviation of image.", exp: "The <img> tag is used to embed an image in an HTML page. It is a self-closing tag." },
+                { char: "mirror", dialogue: "What happens when the mirror breaks?", q: "Which attribute provides alternative text for an image if it cannot be displayed?", code: "<img src='broken.png' ____='Shattered glass'>", options: ["title", "text", "alt", "desc"], a: "alt", hint: "Short for alternative.", exp: "The 'alt' attribute provides alternative information for an image if a user cannot view it." }
+            ]
+        },
+        {
+            roomName: "Sector 4: Resonance",
+            transitionStory: [
+                { char: "system", text: "[SYSTEM WARNING] \n[ENVIRONMENTAL INSTABILITY CRITICAL]\n[USER SYNC: 42%]" },
+                { char: "player", text: "“Why is my sync going up?” I asked, panic creeping in." },
+                { char: "wizard", text: "“The fragment from the last dungeon… It is reacting to this place. Resonating.”" },
+                { char: "player", text: "The crystals around us began to glow brighter. Too bright. They weren’t just reflections anymore. They were possibilities." },
+                { char: "wizard", text: "“Those aren’t enemies. They are potential outcomes.”" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "List the possibilities, in no particular order.", q: "Which tag creates an unordered (bulleted) list?", code: "____", options: ["<ol>", "<ul>", "<list>", "<li>"], a: "<ul>", hint: "Stands for Unordered List.", exp: "The <ul> tag defines an unordered (bulleted) list." },
+                { char: "wizard", dialogue: "Identify a single outcome from the list.", q: "Which tag defines an individual item within a list?", code: "____Corrupted Player____", options: ["<li>", "<item>", "<ul>", "<ol>"], a: "<li>", hint: "Stands for List Item.", exp: "The <li> tag is used to define an item in a list (used inside <ul> or <ol>)." },
+                { char: "core", dialogue: "Organize the data into a grid of fate.", q: "Which tag defines a row within an HTML table?", code: "____", options: ["<td>", "<table>", "<tr>", "<th>"], a: "<tr>", hint: "Stands for Table Row.", exp: "The <tr> tag defines a row in an HTML table." }
+            ]
+        },
+        {
+            roomName: "Sector 5: The Inward Fold",
+            transitionStory: [
+                { char: "player", text: "A deep tremor rolled through the cavern. At its center, something began to form— Not a creature. Not a boss. Something… incomplete." },
+                { char: "wizard", text: "“That… is not a standard core. It is responding to you.”" },
+                { char: "player", text: "The ground beneath me cracked—not outward, but inward—like the cavern itself was folding toward a single point. Toward— Me." },
+                { char: "player", text: "What if this world isn’t trying to be saved? What if it’s trying to finish me?" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "We need a massive block to contain the core's energy!", q: "Which tag is a generic block-level container used for grouping content?", code: "____ id='core_containment'>...____", options: ["<span>", "<section>", "<div>", "<block>"], a: "<div>", hint: "Short for division.", exp: "The <div> tag is a block-level generic container for grouping HTML elements." },
+                { char: "wizard", dialogue: "Now isolate a single shard of inline energy.", q: "Which tag is a generic inline container used to style small pieces of text?", code: "____style='color: purple;'>shard____", options: ["<div>", "<span>", "<p>", "<inline>"], a: "<span>", hint: "It spans across a small piece of text.", exp: "The <span> tag is an inline container used to mark up a part of a text, or a part of a document." },
+                { char: "core", dialogue: "Bind it to a singular identity!", q: "Which attribute specifies a unique alphanumeric identifier for an element?", code: "<div ____='singularity_point'>", options: ["class", "id", "name", "key"], a: "id", hint: "Short for identification.", exp: "The 'id' attribute specifies a unique id for an HTML element. The value must be unique within the document." }
+            ]
+        }
+    ],
+
+    init() {
+        document.getElementById("proceed-btn").addEventListener("click", () => this.handleProceed());
+        
+        document.getElementById("close-feedback-btn").addEventListener("click", () => {
+            document.getElementById("feedback-box").classList.add("hidden");
+            if (this.sync <= 0) {
+                alert("Sync Depleted. YOU HAVE BEEN ASSIMILATED.");
+                location.reload();
+            }
+        });
+
+        document.getElementById("hint-btn").addEventListener("click", () => {
+            const qData = this.rooms[this.currentRoomIndex].questions[this.currentQuestionIndex];
+            if(this.sync > 5) {
+                this.sync -= 5;
+                this.updateHUD();
+                alert(`HINT: ${qData.hint}`);
+            } else {
+                alert("Sync level too critical to request a hint!");
+            }
+        });
+
+        this.currentStoryBlock = this.introScript;
+        this.renderDialogue();
+    },
+
+    renderDialogue() {
+    const line = this.currentStoryBlock[this.storyStep];
+    const charData = characters[line.char];
+
+    const npcText = document.getElementById("npc-text");
+    const proceedBtn = document.getElementById("proceed-btn");
+
+    // Character Info
+    document.getElementById("npc-emoji").innerText = charData.emoji;
+    document.getElementById("npc-name").innerText = charData.name;
+    document.getElementById("npc-name").style.color = charData.color;
+
+    // Reset
+    npcText.innerHTML = "";
+
+    let text = line.text;
+    let index = 0;
+
+    // NEW: typing state
+    this.isTyping = true;
+
+    // Clear old typing interval if exists
+    clearInterval(this.typingInterval);
+
+    // Typing animation
+    this.typingInterval = setInterval(() => {
+
+        if (index < text.length) {
+
+            if (text[index] === "\n") {
+                npcText.innerHTML += "<br>";
+            } else {
+                npcText.innerHTML += text[index];
+            }
+
+            index++;
+
+        } else {
+
+            clearInterval(this.typingInterval);
+
+            this.isTyping = false;
+        }
+
+    }, 25);
+
+    // NEW: Proceed button behavior
+    proceedBtn.onclick = () => {
+
+        // If still typing → instantly complete text
+        if (this.isTyping) {
+
+            clearInterval(this.typingInterval);
+
+            npcText.innerHTML = text.replace(/\n/g, "<br>");
+
+            this.isTyping = false;
+
+        } else {
+
+            // Continue normally
+            this.handleProceed();
+        }
+    };
+},
+
+    handleProceed() {
+        this.storyStep++;
+        if (this.storyStep < this.currentStoryBlock.length) {
+            this.renderDialogue();
+        } else {
+            if (this.gameState === "intro") {
+                this.gameState = "map-intro";
+                this.storyStep = 0;
+                this.currentStoryBlock = this.mapIntroScript;
+                this.renderDialogue();
+            } else if (this.gameState === "map-intro" || this.gameState === "story") {
+                if (this.currentRoomIndex >= this.rooms.length) {
+                    this.transitionToNextLocation();
+                } else {
+                    this.launchGameplay();
+                }
+            }
+        }
+    },
+
+    launchGameplay() {
+        this.gameState = "playing";
+        document.getElementById("dialogue-box").classList.add("hidden");
+        document.getElementById("hud").classList.remove("hidden");
+        document.getElementById("map-container").classList.remove("hidden");
+        document.getElementById("action-area").classList.remove("hidden");
+        this.updateHUD();
+        this.loadQuestion();
+    },
+
+    updateMap() {
+        const tracker = document.getElementById("room-tracker");
+        tracker.innerHTML = "";
+        this.rooms.forEach((room, index) => {
+            const box = document.createElement("div");
+            box.className = "room";
+            if (index < this.currentRoomIndex) box.classList.add("completed");
+            else if (index === this.currentRoomIndex) box.classList.add("active");
+            box.innerText = index + 1;
+            tracker.appendChild(box);
+        });
+    },
+
+    updateHUD() {
+        document.getElementById("sync").innerText = this.sync;
+        document.getElementById("win-rate").innerText = this.winRate;
+        document.getElementById("chipsets").innerText = this.chipsets;
+        if(this.currentRoomIndex < this.rooms.length) {
+            document.getElementById("current-location").innerText = this.rooms[this.currentRoomIndex].roomName;
+        }
+    },
+
+    loadQuestion() {
+        this.updateMap();
+        
+        const randomTip = this.tips[Math.floor(Math.random() * this.tips.length)];
+        document.getElementById("tips-bar").innerText = randomTip;
+
+        const room = this.rooms[this.currentRoomIndex];
+        const qData = room.questions[this.currentQuestionIndex];
+        const charData = characters[qData.char];
+
+        const actionArea = document.getElementById("action-area");
+        actionArea.classList.remove("fade-in");
+        void actionArea.offsetWidth;
+        actionArea.classList.add("fade-in");
+
+        document.getElementById("in-game-dialogue").innerHTML = `
+            <span style="font-size: 1.5em;">${charData.emoji}</span>
+            <strong style="color:${charData.color}">${charData.name}:</strong>
+            "${qData.dialogue}"
+        `;
+
+        // Safely escape the code snippets for rendering in HTML visually
+        const safeCode = qData.code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        
+        document.getElementById("challenge-text").innerText = `Question ${this.currentQuestionIndex + 1}/3: ${qData.q}`;
+        document.getElementById("code-window").innerHTML = `<code>${safeCode}</code>`;
+        
+        const grid = document.getElementById("options-grid");
+        grid.innerHTML = "";
+        qData.options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.className = "choice-btn";
+            // Escape options that contain HTML brackets
+            btn.innerText = opt; 
+            btn.onclick = () => this.checkAnswer(opt, qData);
+            grid.appendChild(btn);
+        });
+    },
+
+    checkAnswer(selected, qData) {
+        if (selected === qData.a) {
+            this.winRate = Math.min(100, this.winRate + 5);
+            this.chipsets++; 
+            
+            // Random Power-Up Chance
+            if(Math.random() > 0.8 && this.sync < 100) {
+                this.sync = Math.min(100, this.sync + 8);
+                alert("💠 RESONANCE FOUND! Sync stabilized +8.");
+            }
+
+            this.currentQuestionIndex++;
+            if (this.currentQuestionIndex >= 3) {
+                this.currentRoomIndex++;
+                this.currentQuestionIndex = 0;
+                this.triggerRoomTransition();
+            } else {
+                this.updateHUD();
+                this.loadQuestion();
+            }
+        } else {
+            this.winRate = Math.max(0, this.winRate - 10);
+            this.sync -= 12;
+            
+            const container = document.getElementById("game-container");
+            container.classList.remove("shake");
+            void container.offsetWidth;
+            container.classList.add("shake");
+
+            const randomTaunt = this.aiTaunts[Math.floor(Math.random() * this.aiTaunts.length)];
+            document.getElementById("ai-comment").innerText = `"${randomTaunt}"`;
+            document.getElementById("explanation-text").innerText = `Explanation: ${qData.exp}`;
+            document.getElementById("feedback-box").classList.remove("hidden");
+            
+            this.updateHUD();
+        }
+    },
+
+    triggerRoomTransition() {
+        document.getElementById("action-area").classList.add("hidden");
+        
+        const diag = document.getElementById("dialogue-box");
+        diag.classList.remove("hidden");
+
+        this.gameState = "story";
+        this.storyStep = 0;
+        
+        if (this.currentRoomIndex >= this.rooms.length) {
+            this.currentStoryBlock = this.rooms[this.rooms.length - 1].transitionStory;
+        } else {
+            this.currentStoryBlock = this.rooms[this.currentRoomIndex].transitionStory;
+        }
+        
+        this.renderDialogue();
+    },
+
+    transitionToNextLocation() {
+        const requiredChips = 15;
+        const requiredSync = 20;
+
+        document.getElementById("npc-emoji").innerText = "🌌";
+        document.getElementById("npc-name").innerText = "SYSTEM EVALUATION";
+        document.getElementById("npc-name").style.color = "#e040fb";
+
+        const btn = document.getElementById("proceed-btn");
+
+        if (this.chipsets >= requiredChips && this.sync >= requiredSync) {
+            document.getElementById("npc-text").innerHTML = `Requirements Met.<br>Fragments: ${this.chipsets}/${requiredChips} | Sync: ${this.sync}%<br>The Luminous Fracture has collapsed. You survived.`;
+            btn.innerText = "Embrace the Void";
+            btn.onclick = () => {
+                window.location.href = "../Lessons Pages/lesson-css.html"; 
+            };
+        } else {
+            document.getElementById("npc-text").innerHTML = `<span style="color:#ff3333">INSTABILITY DETECTED.</span><br>You need ${requiredChips} Fragments and at least ${requiredSync}% Sync to escape.<br>Your Stats -> Fragments: ${this.chipsets} | Sync: ${this.sync}%<br>The cavern folds inward. You belong to the mirror now.`;
+            btn.innerText = "Shatter & Restart";
+            btn.onclick = () => {
+                location.reload();
+            };
+        }
+    }
+};
+
+window.onload = () => game.init();
+    </script>
+</body>
+</html>

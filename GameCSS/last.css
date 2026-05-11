@@ -1,0 +1,383 @@
+
+        /* Video Background Styling */
+.video-background {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; overflow: hidden;
+}
+#bg-video { min-width: 100%; min-height: 100%; object-fit: cover; }
+.video-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(41, 10, 10, 0.85); /* Dark reddish overlay */
+}
+        /* Golden Glow & Blueish Theme Background */
+        body {
+            background: radial-gradient(circle at center, #0B132B 0%, #1C2541 50%, #000000 100%);
+            color: #FFD700; /* Golden text */
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Glowing overlay effect */
+        .theme-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, rgba(255, 215, 0, 0.15), transparent 50%),
+                        radial-gradient(circle at bottom left, rgba(58, 80, 107, 0.4), transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #game-container {
+            width: 850px;
+            background: rgba(11, 19, 43, 0.85); /* Dark blue background */
+            backdrop-filter: blur(8px);
+            border: 2px solid #FFD700; /* Gold border */
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(92, 192, 255, 0.1);
+            transition: transform 0.1s;
+            position: relative;
+            z-index: 1;
+        }
+
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #FFB703;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #FFD700;
+            font-weight: bold;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Dialogue Box */
+        #dialogue-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-left: 5px solid #FFB703;
+            border-radius: 5px;
+            box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+        #npc-header { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
+        #npc-text { font-size: 1.2em; line-height: 1.6; margin-bottom: 20px; color: #E6F1FF; }
+        
+        button {
+            background: #1C2541;
+            color: #FFD700;
+            border: 1px solid #FFD700;
+            padding: 12px 30px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+        }
+        button:hover:not(:disabled) {
+            background: #FFD700;
+            color: #0B132B;
+            box-shadow: 0 0 20px #FFD700;
+            transform: translateY(-2px);
+        }
+
+        /* Map System Styles */
+        #map-container {
+            background: rgba(28, 37, 65, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px dashed #FFB703;
+        }
+        #room-tracker { display: flex; gap: 15px; }
+        .room {
+            width: 40px; height: 40px; display: flex; justify-content: center;
+            align-items: center; border-radius: 50%; font-weight: bold;
+            background: #0B132B; border: 2px solid #5BC0BE; color: #5BC0BE;
+        }
+        .room.completed { background: #5BC0BE; color: #0B132B; box-shadow: 0 0 10px #5BC0BE; }
+        .room.active { border-color: #FFD700; color: #FFD700; box-shadow: 0 0 15px #FFD700; transform: scale(1.1); }
+
+        /* Action Area */
+        #code-window {
+            background: #000; color: #5BC0BE; padding: 15px;
+            font-family: 'Courier New', monospace; border-left: 3px solid #5BC0BE;
+            margin-bottom: 20px; border-radius: 3px; font-size: 1.1em;
+        }
+        #options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .choice-btn { background: #0B132B; width: 100%; text-align: center; }
+
+        /* Shake Animation for wrong answers */
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* End Screen Formatting */
+        #end-screen {
+            text-align: center;
+            animation: fadeIn 3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* =========================================
+   DRAMATIC INTRO ANIMATION
+========================================= */
+
+#intro-screen{
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at center, rgba(255,0,0,0.12), transparent 40%),
+        linear-gradient(to bottom, #000000, #050814, #000000);
+    z-index: 9999;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
+
+    animation:
+        introFadeOut 2s ease forwards;
+    animation-delay: 6.5s;
+}
+
+/* Huge pulsing background glow */
+#intro-screen::before{
+    content:"";
+    position:absolute;
+    width:700px;
+    height:700px;
+    background:radial-gradient(circle, rgba(255,215,0,0.2), transparent 70%);
+    filter:blur(50px);
+
+    animation:pulseCore 3s infinite ease-in-out;
+}
+
+/* Scanline effect */
+#intro-screen::after{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.03),
+            rgba(255,255,255,0.03) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+
+    opacity:0.2;
+    pointer-events:none;
+}
+
+/* Glitch flashes */
+.intro-glitch{
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,0.02);
+
+    animation:glitchFlash 0.15s infinite;
+}
+
+.intro-content{
+    text-align:center;
+    position:relative;
+    z-index:2;
+
+    animation:introZoom 5s ease forwards;
+}
+
+#intro-title{
+    margin:0;
+    line-height:1;
+    text-transform:uppercase;
+}
+
+#intro-title span{
+    display:block;
+    font-size:5rem;
+    font-weight:900;
+    letter-spacing:8px;
+
+    color:#FFD700;
+
+    text-shadow:
+        0 0 10px #FFD700,
+        0 0 30px #FFD700,
+        0 0 60px rgba(255,215,0,0.8);
+
+    animation:
+        titleFlicker 2s infinite alternate,
+        glitchText 3s infinite;
+}
+
+#intro-title small{
+    display:block;
+    margin-top:20px;
+
+    font-size:1.4rem;
+    letter-spacing:10px;
+    color:#5BC0BE;
+
+    text-shadow:0 0 20px #5BC0BE;
+
+    opacity:0;
+
+    animation:fadeSlideUp 2s ease forwards;
+    animation-delay:1s;
+}
+
+#intro-warning{
+    margin-top:50px;
+
+    color:#ff4444;
+    font-family:"Courier New", monospace;
+    font-size:1rem;
+    letter-spacing:4px;
+
+    opacity:0;
+
+    animation:fadeIn 1s ease forwards;
+    animation-delay:2s;
+}
+
+#intro-loading-bar{
+    width:420px;
+    height:12px;
+
+    border:1px solid #FFD700;
+    margin:30px auto;
+
+    overflow:hidden;
+
+    box-shadow:0 0 20px rgba(255,215,0,0.4);
+}
+
+#intro-loading-fill{
+    width:0%;
+    height:100%;
+
+    background:linear-gradient(90deg,#FFD700,#ff3333,#FFD700);
+
+    box-shadow:0 0 25px #FFD700;
+
+    animation:loadingFill 5s ease forwards;
+    animation-delay:1s;
+}
+
+#intro-subtext{
+    color:#E6F1FF;
+    font-size:1rem;
+    letter-spacing:2px;
+
+    opacity:0;
+
+    animation:fadeIn 2s ease forwards;
+    animation-delay:3s;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+
+@keyframes introFadeOut{
+    0%{
+        opacity:1;
+        visibility:visible;
+    }
+
+    100%{
+        opacity:0;
+        visibility:hidden;
+    }
+}
+
+
+@keyframes introZoom{
+    0%{
+        transform:scale(0.8);
+        opacity:0;
+    }
+
+    30%{
+        transform:scale(1);
+        opacity:1;
+    }
+
+    100%{
+        transform:scale(1.03);
+    }
+}
+
+@keyframes titleFlicker{
+    0%{ opacity:1; }
+    20%{ opacity:0.9; }
+    22%{ opacity:0.4; }
+    24%{ opacity:1; }
+    60%{ opacity:0.95; }
+    100%{ opacity:1; }
+}
+
+@keyframes glitchText{
+    0%{
+        transform:translate(0);
+    }
+
+    20%{
+        transform:translate(-2px,2px);
+    }
+
+    40%{
+        transform:translate(2px,-2px);
+    }
+
+    60%{
+        transform:translate(-1px,1px);
+    }
+
+    80%{
+        transform:translate(1px,-1px);
+    }
+
+    100%{
+        transform:translate(0);
+    }
+}
+
+@keyframes glitchFlash{
+    0%{ opacity:0; }
+    10%{ opacity:0.03; }
+    20%{ opacity:0; }
+    50%{ opacity:0.02; }
+    100%{ opacity:0; }
+}
+
+@keyframes fadeSlideUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}

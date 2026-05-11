@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Fundamentals</title>
+    <link rel="stylesheet" href="../Lesson Styling/lesson-css.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Press+Start+2P&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo"><h3>CODE AND PLAY // CSS FUNDAMENTALS</h3></div>
+            <ul>
+                <li><a href="#intro">Intro</a></li>
+                <li><a href="#syntax">Syntax</a></li>
+                <li><a href="#selectors">Selectors</a></li>
+                <li><a href="#colors">Colors</a></li>
+                <li><a href="#boxmodel">Box Model</a></li>
+                <li><a href="#typography">Typography</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero contents" id="intro">
+            <h1>Master CSS</h1>
+            <p class="subtitle">You must first understand the fundamentals of CSS to bring life and style to your web pages before diving into the storyline.</p>
+        </section>
+
+        <section class="container lesson-section" id="syntax">
+            <h2 class="section-title">1. CSS Syntax</h2>
+            <p class="section-subtitle">CSS is composed of rules. Each rule targets an HTML element and applies styles using properties and values.</p>
+            
+            <div class="code-card">
+<pre><code>selector {
+    property: value;
+}
+
+/* Example */
+h1 {
+    color: blue;
+    font-size: 24px;
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Selector</h3>
+                    <p>Points to the HTML element you want to style (e.g., <code>h1</code>, <code>p</code>, <code>div</code>).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Property</h3>
+                    <p>The aspect of the element you want to change (e.g., <code>color</code>, <code>margin</code>, <code>width</code>).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Value</h3>
+                    <p>The specific setting you want to apply to the chosen property (e.g., <code>blue</code>, <code>20px</code>).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="selectors">
+            <h2 class="section-title">2. Selectors</h2>
+            <p class="section-subtitle">Selectors are how you target specific elements on the page.</p>
+            
+            <div class="code-card">
+<pre><code>/* Element Selector */
+p { line-height: 1.5; }
+
+/* Class Selector (starts with a dot) */
+.highlight { background-color: yellow; }
+
+/* ID Selector (starts with a hash) */
+#main-header { text-align: center; }</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Element</h3>
+                    <p>Targets all instances of a specific HTML tag across the entire page.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Class (.)</h3>
+                    <p>Targets elements that have a specific <code>class</code> attribute. Can be used on multiple elements.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>ID (#)</h3>
+                    <p>Targets a single, unique element that has a specific <code>id</code> attribute.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="colors">
+            <h2 class="section-title">3. Colors & Backgrounds</h2>
+            <p class="section-subtitle">Bring your page to life by changing text and background colors.</p>
+            
+            <div class="code-card">
+<pre><code>.card {
+    /* Text color */
+    color: #ffffff; 
+    
+    /* Background color */
+    background-color: #1a1629; 
+    
+    /* Background image */
+    background-image: url('pattern.png');
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Keywords</h3>
+                    <p>Simple predefined color names like <code>red</code>, <code>blue</code>, or <code>transparent</code>.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Hex Codes</h3>
+                    <p>A 6-character code starting with # representing RGB values (e.g., <code>#ff0000</code> for red).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>RGB / RGBA</h3>
+                    <p>Defines color using Red, Green, Blue values. RGBA adds an alpha channel for opacity.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="boxmodel">
+            <h2 class="section-title">4. The Box Model</h2>
+            <p class="section-subtitle">Every HTML element is essentially a box. Understanding this is crucial for layout.</p>
+            
+            <div class="code-card">
+<pre><code>.box {
+    width: 300px;
+    padding: 20px;       /* Inside space */
+    border: 2px solid;   /* The edge */
+    margin: 15px;        /* Outside space */
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Content</h3>
+                    <p>The actual content of the box, where text and images appear.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Padding</h3>
+                    <p>Clears an area around the content. Padding is inside the border.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Border & Margin</h3>
+                    <p><strong>Border</strong> wraps the padding and content. <strong>Margin</strong> clears space outside the border to separate elements.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="typography">
+            <h2 class="section-title">5. Typography</h2>
+            <p class="section-subtitle">Control how your text looks with font properties.</p>
+
+            <div class="code-card">
+<pre><code>body {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}</code></pre>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>font-family</h3>
+                    <p>Specifies the font for an element. Always include a generic fallback family (like sans-serif).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>font-size</h3>
+                    <p>Sets the size of the text. Can use pixels (px), ems (em), rems (rem), or percentages.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>font-weight</h3>
+                    <p>Determines how thick or thin characters in text should be displayed (e.g., <code>normal</code>, <code>bold</code>).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="quiz-container" id="quiz">
+            <h2>Knowledge Check</h2>
+            <p class="subtitle">Test your understanding of CSS selectors, properties, and the box model.</p>
+            
+            <div class="quiz-card">
+                <form id="cssQuiz">
+                    <div class="question-block">
+                        <p class="question-text">1. What does CSS stand for?</p>
+                        <label><input type="radio" name="q1" value="a"> Computer Style Sheets</label>
+                        <label><input type="radio" name="q1" value="b"> Cascading Style Sheets</label>
+                        <label><input type="radio" name="q1" value="c"> Creative Style System</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">2. How do you select an element with the id "hero"?</p>
+                        <label><input type="radio" name="q2" value="a"> .hero</label>
+                        <label><input type="radio" name="q2" value="b"> *hero</label>
+                        <label><input type="radio" name="q2" value="c"> #hero</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">3. Which property changes the background color of an element?</p>
+                        <label><input type="radio" name="q3" value="a"> background-color</label>
+                        <label><input type="radio" name="q3" value="b"> color</label>
+                        <label><input type="radio" name="q3" value="c"> bg-color</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">4. In the Box Model, what is the transparent area OUTSIDE the border called?</p>
+                        <label><input type="radio" name="q4" value="a"> Padding</label>
+                        <label><input type="radio" name="q4" value="b"> Margin</label>
+                        <label><input type="radio" name="q4" value="c"> Content</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">5. How do you make text bold in CSS?</p>
+                        <label><input type="radio" name="q5" value="a"> font-weight: bold;</label>
+                        <label><input type="radio" name="q5" value="b"> text-style: bold;</label>
+                        <label><input type="radio" name="q5" value="c"> font: bold;</label>
+                    </div>
+
+                    <button type="button" class="btn" onclick="checkQuiz()">Submit Answers</button>
+                    
+                    <div id="quizResult" class="result-message"></div>
+                    
+                    <div class="proceed-area">
+                        <button 
+                        type="button" 
+                        id="proceedBtn" 
+                        class="proceed-btn locked"
+                        onclick="proceedToGame()">
+                        Proceed To Game
+                        </button>
+                        <p id="requirementMessage" class="requirement-message"></p>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Code Academy. Built for learning.</p>
+    </footer>
+
+    <script>
+    let lessonCompleted = false;
+    let passedQuiz = false;
+
+    // Detect if user scrolled through the lesson
+    window.addEventListener("scroll", () => {
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.body.offsetHeight - 200;
+
+        if (scrollPosition >= pageHeight) {
+            lessonCompleted = true;
+        }
+    });
+
+    function checkQuiz() {
+        const form = document.getElementById('cssQuiz');
+        const resultDiv = document.getElementById('quizResult');
+        let score = 0;
+
+        // Correct CSS answers
+        const answers = {
+            q1: 'b', // Cascading Style Sheets
+            q2: 'c', // #hero
+            q3: 'a', // background-color
+            q4: 'b', // Margin
+            q5: 'a'  // font-weight: bold;
+        };
+
+        // Check answers
+        if (form.q1.value === answers.q1) score++;
+        if (form.q2.value === answers.q2) score++;
+        if (form.q3.value === answers.q3) score++;
+        if (form.q4.value === answers.q4) score++;
+        if (form.q5.value === answers.q5) score++;
+
+        // PERFECT SCORE
+        if (score === 5) {
+            passedQuiz = true;
+            const proceedBtn = document.getElementById("proceedBtn");
+
+            // Unlock button if lesson was studied
+            if (passedQuiz) {
+                proceedBtn.classList.remove("locked");
+                proceedBtn.classList.add("unlocked");
+            }
+
+            resultDiv.style.color = "#76ffa9";
+            resultDiv.innerHTML = "Perfect score! 5/5.";
+        } 
+        // FAILED QUIZ
+        else {
+            passedQuiz = false;
+            resultDiv.style.color = "#ff5555";
+            resultDiv.innerHTML = `FAILED. You scored ${score}/5. Please review the lesson and try again.<br>Restarting lesson... `;
+            resultDiv.style.display = "block";
+
+            // Restart lesson from the top after 1 second
+            setTimeout(() => {
+                form.reset();
+                passedQuiz = false;
+                lessonCompleted = false;
+                resultDiv.innerHTML = "";
+                resultDiv.style.display = "none";
+                document.getElementById("requirementMessage").innerHTML = "";
+
+                const proceedBtn = document.getElementById("proceedBtn");
+                proceedBtn.classList.remove("unlocked");
+                proceedBtn.classList.add("locked");
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            }, 1000);
+            return;
+        }
+        resultDiv.style.display = "block";
+    }
+
+    function proceedToGame() {
+        const requirementMessage = document.getElementById("requirementMessage");
+
+        if (passedQuiz) {
+            // Update this link to whatever your next game page is
+            window.location.href = "../GamePages/css.html";
+        } else if (!passedQuiz) {
+            requirementMessage.style.color = "#ff8b56";
+            requirementMessage.innerHTML = "⚠ You must first complete the lesson to proceed to the storyline.";
+        }
+    }
+    </script>
+</body>
+</html>

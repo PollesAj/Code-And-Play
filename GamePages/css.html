@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Sorcerer: Verdant Runtime</title>
+    <link rel="stylesheet" href="../GameCSS/css.css">
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop id="bg-video">
+            <source src="../Video/Forest.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div id="feedback-box" class="hidden">
+        <h2 style="color: #ffb300; margin-top: 0; font-family: 'Courier New', Courier, monospace;">⚠️ STYLING ERROR</h2>
+        <div id="ai-comment"></div>
+        <div id="explanation-text"></div>
+        <button id="close-feedback-btn" class="choice-btn" style="margin-top: 20px; border-color: #ffb300; color: #ffb300;">Acknowledge</button>
+    </div>
+
+    <div id="game-container">
+        <div id="hud" class="hidden">
+            <div class="stat">Stability: <span id="battery" style="color: #69f0ae;">100</span>%</div>
+            <div class="stat">Root Keys: <span id="chipsets" style="color: #b2ff59;">0</span>/15</div>
+            <div class="stat">Sync Rate: <span id="win-rate">50</span>%</div>
+            <div class="stat">Location: <span id="current-location">Luminous Fracture</span></div>
+        </div>
+
+        <div id="dialogue-box">
+            <div id="npc-header">
+                <span id="npc-emoji">🌿</span>
+                <span id="npc-name">SYSTEM LOG</span>
+            </div>
+            <div id="npc-text">Loading...</div>
+            <button id="proceed-btn">Proceed</button>
+        </div>
+
+        <div id="map-container" class="hidden">
+            <h3 id="map-label" style="margin: 0 0 10px 0; font-size: 1em;">Root Node Distance</h3>
+            <div id="room-tracker">
+                </div>
+        </div>
+
+        <div id="action-area" class="hidden">
+            <div id="tips-bar">Tip: Always close your CSS declarations with a semicolon!</div>
+
+            <div id="in-game-dialogue" class="character-prompt"></div>
+            <p id="challenge-text"></p>
+            <div id="code-window"></div>
+            <div id="options-grid"></div>
+            
+            <button id="hint-btn">💡 Request Hint (-5 Stability)</button>
+        </div>
+    </div>
+
+    <script>
+const characters = {
+    player: { name: "Player", emoji: "👤", color: "#ffffff" },
+    wizard: { name: "Arch-Mage Polles", emoji: "🧙‍♂️", color: "#81c784" },
+    system: { name: "System Node", emoji: "🏛️", color: "#69f0ae" },
+    enemy: { name: "Corrupted AI", emoji: "🐍", color: "#ffb300" }
+};
+
+const game = {
+    gameState: "intro",
+    storyStep: 0,
+    battery: 100,
+    chipsets: 0,
+    winRate: 50,
+    currentRoomIndex: 0,
+    currentQuestionIndex: 0,
+    
+    aiTaunts: [
+        "Your layouts are crumbling like dead leaves.",
+        "A 90s browser could parse better than you.",
+        "You're out of the flow. Completely unaligned.",
+        "The AI expands while you forget your selectors.",
+        "Error: Style not found. Try harder."
+    ],
+    tips: [
+        "Tip: Classes are targeted with a period (.), IDs with a hash (#).",
+        "Tip: Padding creates space INSIDE the element's border. Margin creates space OUTSIDE.",
+        "Tip: 'display: flex;' is powerful for one-dimensional layouts (rows or columns).",
+        "Tip: Keep an eye on your Stability! Wrong CSS properties drain it."
+    ],
+
+    introScript: [
+        { char: "player", text: "The cavern didn’t end. It released me." },
+        { char: "player", text: "The light shattered. Not like before—not a clean transition, not a system shift." },
+        { char: "player", text: "This time, it felt like something let go. I hit the ground hard. Dirt. Real dirt. Warm. Alive." },
+        { char: "player", text: "For a second, I just stayed there—breathing, feeling the uneven earth beneath my hands. No echoes. Just wind. Just sound. Just… real." },
+        { char: "wizard", text: "“…You’ve exited the Luminous Fracture.”" },
+        { char: "player", text: "Its voice sounded… clearer here. Less distorted. I pushed myself up slowly. “…This place feels different.”" },
+        { char: "wizard", text: "“It is. Lower corruption density. Higher environmental stability.”" },
+        { char: "player", text: "I looked around. Dense trees towered overhead, their leaves forming a thick canopy that filtered the sunlight into shifting patterns. Vines hung like cables. The air was humid, heavy—but steady. Not breaking. Not flickering." }
+    ],
+
+    mapIntroScript: [
+        { char: "player", text: "“Where are we?”" },
+        { char: "wizard", text: "“Designation: Verdant Runtime.”" },
+        { char: "player", text: "“…A jungle.”" },
+        { char: "wizard", text: "“Correct.”" },
+        { char: "player", text: "For the first time since this all started—Nothing attacked. I took a few cautious steps forward." },
+        { char: "player", text: "No corrupted beasts. No system warnings screaming in my head." },
+        { char: "player", text: "“…Why is it quiet?”" },
+        { char: "wizard", text: "“Because, this area is not fully under the AI’s control. There are other systems here. Older ones. Hidden. Resisting overwrite.”" },
+        { char: "player", text: "“Wait—so this place is… safe?”" },
+        { char: "wizard", text: "“Relatively.”" }
+    ],
+
+    rooms: [
+        {
+            roomName: "Region 1: The Root Selectors",
+            transitionStory: [
+                { char: "player", text: "Relatively. Of course. I exhaled, running a hand through my hair. “…I didn’t realize how loud everything was until it stopped.”" },
+                { char: "wizard", text: "“That is a common response.”" },
+                { char: "player", text: "We moved deeper into the jungle. The further we went, the more… stable everything felt. The trees weren’t frozen mid-motion." },
+                { char: "wizard", text: "“We must align the local syntax to progress further. The foliage here answers to Cascading Style Sheets.”" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "Target the specific vine blocking our path.", q: "How do you select an element with id='vine' in CSS?", code: "____ { color: green; }", options: [".vine", "#vine", "*vine", "vine"], a: "#vine", hint: "IDs are identified by a hashtag.", exp: "The '#' symbol is the ID selector in CSS, used to target a single, unique element." },
+                { char: "wizard", dialogue: "We need to recolor all the leaves at once.", q: "How do you select elements with the class 'leaf'?", code: "____ { background: green; }", options: [".leaf", "#leaf", "leaf", "@leaf"], a: ".leaf", hint: "Classes use a period.", exp: "The '.' symbol is the Class selector in CSS, used to target multiple elements sharing that class." },
+                { char: "enemy", dialogue: "I will hide everything in the canopy!", q: "Which property makes text completely invisible?", code: "color: ____;", options: ["hidden", "transparent", "none", "opacity(0)"], a: "transparent", hint: "It means 'allowing light to pass through'.", exp: "Setting a color to 'transparent' makes the text invisible while keeping the element in the document flow." }
+            ]
+        },
+        {
+            roomName: "Region 2: The Box Model Thicket",
+            transitionStory: [
+                { char: "player", text: "It almost felt like—Before." },
+                { char: "player", text: "Then I saw it. Through the trees, partially hidden by vines and roots—A structure. Old. Massive. And intact." },
+                { char: "player", text: "“…That’s not natural.”" },
+                { char: "wizard", text: "“No. It is not. This is a root system node.”" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "Push the corruption away from the node's exterior.", q: "Which property creates space OUTSIDE an element's border?", code: "____: 20px;", options: ["padding", "margin", "spacing", "border-spacing"], a: "margin", hint: "Think of the blank space around a printed page.", exp: "Margin clears an area outside the border. The margin does not have a background color, it is completely transparent." },
+                { char: "wizard", dialogue: "Now, create a buffer inside the node's walls.", q: "Which property creates space INSIDE an element's border?", code: "____: 15px;", options: ["padding", "margin", "inner-space", "content"], a: "padding", hint: "Like adding foam to the inside of a helmet.", exp: "Padding clears an area around the content, INSIDE the border. It is affected by the element's background color." },
+                { char: "enemy", dialogue: "Your structures will overflow!", q: "Which property ensures padding and border are included in the element's total width?", code: "box-sizing: ____;", options: ["content-box", "border-box", "padding-box", "margin-box"], a: "border-box", hint: "It keeps the box constrained by the border.", exp: "box-sizing: border-box tells the browser to account for any border and padding in the values you specify for an element's width and height." }
+            ]
+        },
+        {
+            roomName: "Region 3: The Flex Canopy",
+            transitionStory: [
+                { char: "wizard", text: "“This place existed before the AI. Before the corruption spread. It maintains core functions of the world.”" },
+                { char: "player", text: "“…So this is like… the source?”" },
+                { char: "wizard", text: "“Partially.”" },
+                { char: "player", text: "I stepped closer to the structure. As I did—The pulse in my chest reacted again. But this time—It didn’t hurt. It… synchronized." },
+                { char: "system", text: "[SYSTEM RESPONSE DETECTED]\n[USER INTEGRATION: 61%]\n[FOREIGN SIGNAL… ACCEPTED]" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "The roots must be flexible to grow together.", q: "How do you activate a flexbox layout?", code: "____: flex;", options: ["layout", "position", "display", "align"], a: "display", hint: "It dictates how the element is displayed.", exp: "Setting 'display: flex' establishes a flex container and enables a flex context for all its direct children." },
+                { char: "wizard", dialogue: "Align the energy lines across the main axis.", q: "Which property aligns flex items horizontally (default row)?", code: "____: center;", options: ["align-items", "justify-content", "text-align", "vertical-align"], a: "justify-content", hint: "It 'justifies' the spacing.", exp: "justify-content aligns the flexible container's items when the items do not use all available space on the main-axis." },
+                { char: "enemy", dialogue: "Your vines will snap under pressure!", q: "How do you allow flex items to move to a new line if there isn't enough room?", code: "flex-wrap: ____;", options: ["wrap", "auto", "break", "scroll"], a: "wrap", hint: "Like wrapping a present.", exp: "flex-wrap: wrap specifies that flex items will wrap onto multiple lines, from top to bottom." }
+            ]
+        },
+        {
+            roomName: "Region 4: The Responsive River",
+            transitionStory: [
+                { char: "player", text: "The ground beneath us lit up—lines of energy tracing through the jungle floor, connecting to the structure." },
+                { char: "system", text: "“—User recognized. Access level… partial. Conflict detected. AI presence… expanding.”" },
+                { char: "player", text: "I looked at the wizard. “…Tell me this is good.”" },
+                { char: "wizard", text: "“It means you are approaching the system’s core layer.”" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "The river must adapt to the size of the canyon.", q: "Which rule applies CSS only when a screen meets certain conditions?", code: "____ (max-width: 600px) { }", options: ["@media", "@screen", "@responsive", "@query"], a: "@media", hint: "It queries the media type.", exp: "Media queries (@media) are used to apply different styles for different media types/devices." },
+                { char: "wizard", dialogue: "Scale the interface relative to the root system.", q: "Which unit is relative to the root element's font size?", code: "font-size: 2____;", options: ["em", "px", "rem", "vh"], a: "rem", hint: "The 'r' stands for root.", exp: "'rem' stands for 'root em'. It is relative to the font-size of the root element (usually the <html> tag)." },
+                { char: "enemy", dialogue: "I will drown you in static layouts!", q: "What is 50% of the viewport's height?", code: "height: 50____;", options: ["%", "vh", "vw", "em"], a: "vh", hint: "Viewport Height.", exp: "'vh' stands for viewport height. 1vh is 1% of the viewport height, so 50vh is half the height of the screen." }
+            ]
+        },
+        {
+            roomName: "Region 5: The Core Initialization",
+            transitionStory: [
+                { char: "player", text: "The jungle shifted. The wind slowed. The light dimmed. The sounds… Stopped." },
+                { char: "wizard", text: "“It means there is only one major region left between you… and the source of everything.”" },
+                { char: "player", text: "I stared at the structure. At the glowing lines. At the way the jungle itself seemed to be waiting." },
+                { char: "player", text: "“…So this is it. I’m close.”" }
+            ],
+            questions: [
+                { char: "wizard", dialogue: "Smooth the transition of energy flowing into the core.", q: "Which property controls the animation speed of changing a CSS value?", code: "____: background-color 0.5s ease;", options: ["animation", "transform", "transition", "delay"], a: "transition", hint: "It 'transitions' from one state to another.", exp: "CSS transitions allow you to change property values smoothly, over a given duration." },
+                { char: "wizard", dialogue: "Keep the core element fixed in place, regardless of scrolling.", q: "Which positioning keeps an element relative to the viewport?", code: "position: ____;", options: ["absolute", "relative", "sticky", "fixed"], a: "fixed", hint: "It is 'fixed' to the screen.", exp: "An element with position: fixed; is positioned relative to the viewport, which means it always stays in the same place even if the page is scrolled." },
+                { char: "enemy", dialogue: "You are not worthy of the root code!", q: "What rule ensures a CSS property overrides all others?", code: "color: red ____;", options: ["!override", "!important", "!force", "!absolute"], a: "!important", hint: "It is very 'important'.", exp: "The !important rule overrides normal specificity rules, making that specific declaration take absolute priority." }
+            ]
+        }
+    ],
+
+    init() {
+        document.getElementById("proceed-btn").addEventListener("click", () => this.handleProceed());
+        
+        document.getElementById("close-feedback-btn").addEventListener("click", () => {
+            document.getElementById("feedback-box").classList.add("hidden");
+            if (this.battery <= 0) {
+                alert("Stability Depleted. The AI has consumed you. GAME OVER.");
+                location.reload();
+            }
+        });
+
+        document.getElementById("hint-btn").addEventListener("click", () => {
+            const qData = this.rooms[this.currentRoomIndex].questions[this.currentQuestionIndex];
+            if(this.battery > 5) {
+                this.battery -= 5;
+                this.updateHUD();
+                alert(`HINT: ${qData.hint}`);
+            } else {
+                alert("Not enough stability to decrypt a hint!");
+            }
+        });
+
+        this.currentStoryBlock = this.introScript;
+        this.renderDialogue();
+    },
+
+renderDialogue() {
+    const line = this.currentStoryBlock[this.storyStep];
+    const charData = characters[line.char];
+
+    const npcText = document.getElementById("npc-text");
+    const proceedBtn = document.getElementById("proceed-btn");
+
+    // Character Info
+    document.getElementById("npc-emoji").innerText = charData.emoji;
+    document.getElementById("npc-name").innerText = charData.name;
+    document.getElementById("npc-name").style.color = charData.color;
+
+    // Reset
+    npcText.innerHTML = "";
+
+    let text = line.text;
+    let index = 0;
+
+    // NEW: typing state
+    this.isTyping = true;
+
+    // Clear old typing interval if exists
+    clearInterval(this.typingInterval);
+
+    // Typing animation
+    this.typingInterval = setInterval(() => {
+
+        if (index < text.length) {
+
+            if (text[index] === "\n") {
+                npcText.innerHTML += "<br>";
+            } else {
+                npcText.innerHTML += text[index];
+            }
+
+            index++;
+
+        } else {
+
+            clearInterval(this.typingInterval);
+
+            this.isTyping = false;
+        }
+
+    }, 25);
+
+    // NEW: Proceed button behavior
+    proceedBtn.onclick = () => {
+
+        // If still typing → instantly complete text
+        if (this.isTyping) {
+
+            clearInterval(this.typingInterval);
+
+            npcText.innerHTML = text.replace(/\n/g, "<br>");
+
+            this.isTyping = false;
+
+        } else {
+
+            // Continue normally
+            this.handleProceed();
+        }
+    };
+},
+
+    handleProceed() {
+        this.storyStep++;
+        if (this.storyStep < this.currentStoryBlock.length) {
+            this.renderDialogue();
+        } else {
+            if (this.gameState === "intro") {
+                this.gameState = "map-intro";
+                this.storyStep = 0;
+                this.currentStoryBlock = this.mapIntroScript;
+                this.renderDialogue();
+            } else if (this.gameState === "map-intro" || this.gameState === "story") {
+                if (this.currentRoomIndex >= this.rooms.length) {
+                    this.transitionToNextLocation();
+                } else {
+                    this.launchGameplay();
+                }
+            }
+        }
+    },
+
+    launchGameplay() {
+        this.gameState = "playing";
+        document.getElementById("dialogue-box").classList.add("hidden");
+        document.getElementById("hud").classList.remove("hidden");
+        document.getElementById("map-container").classList.remove("hidden");
+        document.getElementById("action-area").classList.remove("hidden");
+        this.updateHUD();
+        this.loadQuestion();
+    },
+
+    updateMap() {
+        const tracker = document.getElementById("room-tracker");
+        tracker.innerHTML = "";
+        this.rooms.forEach((room, index) => {
+            const box = document.createElement("div");
+            box.className = "room";
+            if (index < this.currentRoomIndex) box.classList.add("completed");
+            else if (index === this.currentRoomIndex) box.classList.add("active");
+            box.innerText = index + 1;
+            tracker.appendChild(box);
+        });
+    },
+
+    updateHUD() {
+        document.getElementById("battery").innerText = this.battery;
+        document.getElementById("win-rate").innerText = this.winRate;
+        document.getElementById("chipsets").innerText = this.chipsets;
+        if(this.currentRoomIndex < this.rooms.length) {
+            document.getElementById("current-location").innerText = this.rooms[this.currentRoomIndex].roomName;
+        }
+    },
+
+    loadQuestion() {
+        this.updateMap();
+        
+        const randomTip = this.tips[Math.floor(Math.random() * this.tips.length)];
+        document.getElementById("tips-bar").innerText = randomTip;
+
+        const room = this.rooms[this.currentRoomIndex];
+        const qData = room.questions[this.currentQuestionIndex];
+        const charData = characters[qData.char];
+
+        const actionArea = document.getElementById("action-area");
+        actionArea.classList.remove("fade-in");
+        void actionArea.offsetWidth;
+        actionArea.classList.add("fade-in");
+
+        document.getElementById("in-game-dialogue").innerHTML = `
+            <span style="font-size: 1.5em;">${charData.emoji}</span>
+            <strong style="color:${charData.color}">${charData.name}:</strong>
+            "${qData.dialogue}"
+        `;
+
+        document.getElementById("challenge-text").innerText = `Sequence ${this.currentQuestionIndex + 1}/3: ${qData.q}`;
+        document.getElementById("code-window").innerHTML = `<code>${qData.code}</code>`;
+        
+        const grid = document.getElementById("options-grid");
+        grid.innerHTML = "";
+        qData.options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.className = "choice-btn";
+            btn.innerText = opt;
+            btn.onclick = () => this.checkAnswer(opt, qData);
+            grid.appendChild(btn);
+        });
+    },
+
+    checkAnswer(selected, qData) {
+        if (selected === qData.a) {
+            this.winRate = Math.min(100, this.winRate + 5);
+            this.chipsets++;
+            
+            if(Math.random() > 0.8 && this.battery < 100) {
+                this.battery = Math.min(100, this.battery + 10);
+                alert("✨ CLEAN CODE EXECUTED! Stability restored +10.");
+            }
+
+            this.currentQuestionIndex++;
+            if (this.currentQuestionIndex >= 3) {
+                this.currentRoomIndex++;
+                this.currentQuestionIndex = 0;
+                this.triggerRoomTransition();
+            } else {
+                this.updateHUD();
+                this.loadQuestion();
+            }
+        } else {
+            this.winRate = Math.max(0, this.winRate - 10);
+            this.battery -= 15;
+            
+            const container = document.getElementById("game-container");
+            container.classList.remove("shake");
+            void container.offsetWidth;
+            container.classList.add("shake");
+
+            const randomTaunt = this.aiTaunts[Math.floor(Math.random() * this.aiTaunts.length)];
+            document.getElementById("ai-comment").innerText = `"${randomTaunt}"`;
+            document.getElementById("explanation-text").innerText = `System Notice: ${qData.exp}`;
+            document.getElementById("feedback-box").classList.remove("hidden");
+            
+            this.updateHUD();
+        }
+    },
+
+    triggerRoomTransition() {
+        document.getElementById("action-area").classList.add("hidden");
+        
+        const diag = document.getElementById("dialogue-box");
+        diag.classList.remove("hidden");
+
+        this.gameState = "story";
+        this.storyStep = 0;
+        
+        if (this.currentRoomIndex >= this.rooms.length) {
+            // Final Narrative Block
+            this.currentStoryBlock = [
+                { char: "player", text: "The pulse in my chest answered again. Stronger than ever." },
+                { char: "player", text: "Not just syncing—But… aligning." },
+                { char: "player", text: "And for the first time—I understood something without being told. The fragments. The dungeons. The AI. The system. They weren’t separate." },
+                { char: "player", text: "They were all fighting over the same thing. Me." },
+                { char: "player", text: "I clenched my fists. “…Then whatever’s next, we finish it.”" },
+                { char: "system", text: "[NEXT PATHWAY UNLOCKED]\n[FINAL REGION: INITIALIZING…]" },
+                { char: "player", text: "The jungle darkened. Not corrupted. Not broken. But… preparing. And deep within the system—Something awakened." }
+            ];
+        } else {
+            this.currentStoryBlock = this.rooms[this.currentRoomIndex].transitionStory;
+        }
+        
+        this.renderDialogue();
+    },
+
+    transitionToNextLocation() {
+        const requiredChips = 15;
+        const requiredBattery = 30;
+
+        document.getElementById("npc-emoji").innerText = "⚙️";
+        document.getElementById("npc-name").innerText = "ROOT NODE SYNC";
+        document.getElementById("npc-name").style.color = "#69f0ae";
+
+        const btn = document.getElementById("proceed-btn");
+
+        if (this.chipsets >= requiredChips && this.battery >= requiredBattery) {
+            document.getElementById("npc-text").innerHTML = `Integration Complete.<br>Root Keys: ${this.chipsets}/${requiredChips} | Stability: ${this.battery}%<br>Verdant Runtime Initialized. Entering the Source...`;
+            btn.innerText = "Enter The Source";
+            btn.onclick = () => {
+                window.location.href = "../GamePages/last.html"; 
+            };
+        } else {
+            document.getElementById("npc-text").innerHTML = `<span style="color:#ffb300">INTEGRATION FAILED.</span><br>You need ${requiredChips} Keys and at least ${requiredBattery}% Stability to proceed.<br>Current Stats -> Keys: ${this.chipsets} | Stability: ${this.battery}%<br>The jungle resets...`;
+            btn.innerText = "Reboot Runtime";
+            btn.onclick = () => {
+                location.reload();
+            };
+        }
+    }
+};
+
+window.onload = () => game.init();
+    </script>
+</body>
+</html>

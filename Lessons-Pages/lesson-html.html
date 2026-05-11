@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Fundamentals</title>
+    <link rel="stylesheet" href="../Lesson Styling/lesson-html.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Press+Start+2P&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo"><h3>CODE AND PLAY // HTML FUNDAMENTALS</h3></div>
+            <ul>
+                <li><a href="#intro">Intro</a></li>
+                <li><a href="#boilerplate">Boilerplate</a></li>
+                <li><a href="#elements">Elements</a></li>
+                <li><a href="#attributes">Attributes</a></li>
+                <li><a href="#media">Links & Media</a></li>
+                <li><a href="#lists">Lists</a></li>
+                <li><a href="#tables">Tables</a></li>
+                <li><a href="#forms">Forms</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero contents" id="intro">
+            <h1>Master HTML</h1>
+            <p class="subtitle">You must first understand the fundamentals of HTML before diving into the storyline.</p>
+        </section>
+
+        <section class="container lesson-section" id="boilerplate">
+            <h2 class="section-title">1. The Basic Boilerplate</h2>
+            <p class="section-subtitle">Every HTML document starts with a fundamental structure. Here is the classic blank canvas.</p>
+            
+            <div class="code-card">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;title&gt;My First Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>&lt;!DOCTYPE html&gt;</h3>
+                    <p>Declares the document type and tells the browser to render the page using HTML5 standards.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;head&gt;</h3>
+                    <p>Contains meta-information about the webpage, like the title, character set, and links to stylesheets.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;body&gt;</h3>
+                    <p>The container for all the visible content of your webpage, such as headings, paragraphs, and images.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="elements">
+            <h2 class="section-title">2. Elements & Tags</h2>
+            <p class="section-subtitle">HTML uses tags to structure text. Most elements have an opening tag and a closing tag.</p>
+            
+            <div class="code-card">
+<pre><code>&lt;h1&gt;Main Heading&lt;/h1&gt;
+&lt;h2&gt;Subheading&lt;/h2&gt;
+&lt;p&gt;This is a standard paragraph of text.&lt;/p&gt;
+
+&lt;!-- Self-closing tag --&gt;
+&lt;hr&gt;
+&lt;br&gt;</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Headings (h1 - h6)</h3>
+                    <p>Defines headings on your page. <code>&lt;h1&gt;</code> is the most important (largest), down to <code>&lt;h6&gt;</code>.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Paragraphs (&lt;p&gt;)</h3>
+                    <p>Used for blocks of text. Browsers automatically add empty space (margins) before and after paragraphs.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Self-Closing Tags</h3>
+                    <p>Some tags like <code>&lt;br&gt;</code> (line break) or <code>&lt;hr&gt;</code> (horizontal rule) don't wrap content and don't need a closing tag.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="attributes">
+            <h2 class="section-title">3. Attributes</h2>
+            <p class="section-subtitle">Attributes provide additional information about HTML elements and are always specified in the start tag.</p>
+            
+            <div class="code-card">
+<pre><code>&lt;p class="highlight"&gt;This text has a class attribute.&lt;/p&gt;
+&lt;div id="main-section"&gt;This div has a unique ID.&lt;/div&gt;
+&lt;p title="Tooltip text!"&gt;Hover over me.&lt;/p&gt;</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>class</h3>
+                    <p>Assigns one or more class names to an element. Used heavily by CSS to style multiple elements at once.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>id</h3>
+                    <p>Assigns a unique identifier to an element. No two elements on a page should have the same ID.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>title</h3>
+                    <p>Provides extra information about an element, typically displayed as a tooltip when hovered.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="media">
+            <h2 class="section-title">4. Links & Images</h2>
+            <p class="section-subtitle">Connect your pages to the web and embed rich media like images.</p>
+            
+            <div class="code-card">
+<pre><code>&lt;!-- Anchor (Link) --&gt;
+&lt;a href="https://example.com" target="_blank"&gt;Visit Example&lt;/a&gt;
+
+&lt;!-- Image --&gt;
+&lt;img src="hero.jpg" alt="A brave knight" width="300"&gt;</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Anchor Tag (&lt;a&gt;)</h3>
+                    <p>Defines a hyperlink. The <code>href</code> attribute specifies the destination URL.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Image Tag (&lt;img&gt;)</h3>
+                    <p>Embeds an image. Requires the <code>src</code> (source) attribute to locate the image file.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>alt Attribute</h3>
+                    <p>Provides alternative text for an image if it fails to load, crucial for accessibility and screen readers.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="lists">
+            <h2 class="section-title">5. Lists</h2>
+            <p class="section-subtitle">Organize related items using ordered or unordered lists.</p>
+            
+            <div class="code-card">
+<pre><code>&lt;h3&gt;Unordered List&lt;/h3&gt;
+&lt;ul&gt;
+    &lt;li&gt;Swords&lt;/li&gt;
+    &lt;li&gt;Shields&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Ordered List&lt;/h3&gt;
+&lt;ol&gt;
+    &lt;li&gt;First quest&lt;/li&gt;
+    &lt;li&gt;Second quest&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>&lt;ul&gt;</h3>
+                    <p>Creates an unordered list, typically displayed with bullet points.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;ol&gt;</h3>
+                    <p>Creates an ordered list, typically displayed with numbers or letters.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;li&gt;</h3>
+                    <p>Stands for "List Item". Used inside both <code>&lt;ul&gt;</code> and <code>&lt;ol&gt;</code> elements.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="tables">
+            <h2 class="section-title">6. Tables</h2>
+            <p class="section-subtitle">Display data in a structured grid of rows and columns.</p>
+
+            <div class="code-card">
+<pre><code>&lt;table border="1"&gt;
+    &lt;tr&gt;
+        &lt;th&gt;Class&lt;/th&gt;
+        &lt;th&gt;HP&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Mage&lt;/td&gt;
+        &lt;td&gt;80&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>&lt;table&gt;</h3>
+                    <p>The container element that wraps all the data and structure for your table.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;tr&gt; &amp; &lt;th&gt;</h3>
+                    <p><code>&lt;tr&gt;</code> creates a table row. <code>&lt;th&gt;</code> creates a table header cell (usually bold and centered).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;td&gt;</h3>
+                    <p>Table Data. These are the standard cells that hold your actual data inside a row.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container lesson-section" id="forms">
+            <h2 class="section-title">7. Forms</h2>
+            <p class="section-subtitle">Collect user input using text fields, radio buttons, and submit buttons.</p>
+
+            <div class="code-card">
+<pre><code>&lt;form action="/submit" method="POST"&gt;
+    &lt;label for="username"&gt;Username:&lt;/label&gt;
+    &lt;input type="text" id="username" name="username"&gt;
+
+    &lt;label for="password"&gt;Password:&lt;/label&gt;
+    &lt;input type="password" id="password" name="password"&gt;
+
+    &lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>&lt;form&gt;</h3>
+                    <p>The shell for collecting input. The <code>action</code> attribute dictates where data goes, and <code>method</code> determines how it gets sent.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;input&gt;</h3>
+                    <p>A highly versatile tag. Depending on its <code>type</code> attribute, it can be a text box, checkbox, radio button, or date picker.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>&lt;label&gt;</h3>
+                    <p>Provides a text label for an input. The <code>for</code> attribute should match the input's <code>id</code> for accessibility.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="quiz-container" id="quiz">
+            <h2>Knowledge Check</h2>
+            <p class="subtitle">Test your understanding of HTML tags, attributes, and structures.</p>
+            
+            <div class="quiz-card">
+                <form id="htmlQuiz">
+                    <div class="question-block">
+                        <p class="question-text">1. What does HTML stand for?</p>
+                        <label><input type="radio" name="q1" value="a"> Hyper Text Markup Language</label>
+                        <label><input type="radio" name="q1" value="b"> Home Tool Markup Language</label>
+                        <label><input type="radio" name="q1" value="c"> Hyperlinks and Text Markup Language</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">2. Which HTML tag is used for the largest and most important heading?</p>
+                        <label><input type="radio" name="q2" value="a"> &lt;h6&gt;</label>
+                        <label><input type="radio" name="q2" value="b"> &lt;heading&gt;</label>
+                        <label><input type="radio" name="q2" value="c"> &lt;h1&gt;</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">3. Which attribute is used inside the <code>&lt;a&gt;</code> tag to specify the destination URL?</p>
+                        <label><input type="radio" name="q3" value="a"> src</label>
+                        <label><input type="radio" name="q3" value="b"> href</label>
+                        <label><input type="radio" name="q3" value="c"> link</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">4. Which of the following is the correct tag to embed an image?</p>
+                        <label><input type="radio" name="q4" value="a"> &lt;picture&gt;</label>
+                        <label><input type="radio" name="q4" value="b"> &lt;image&gt;</label>
+                        <label><input type="radio" name="q4" value="c"> &lt;img&gt;</label>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">5. Which of the following is considered a self-closing tag?</p>
+                        <label><input type="radio" name="q5" value="a"> &lt;br&gt;</label>
+                        <label><input type="radio" name="q5" value="b"> &lt;div&gt;</label>
+                        <label><input type="radio" name="q5" value="c"> &lt;p&gt;</label>
+                    </div>
+
+                    <button type="button" class="btn" onclick="checkQuiz()">Submit Answers</button>
+                    
+                    <div id="quizResult" class="result-message"></div>
+                    
+                    <div class="proceed-area">
+                        <button 
+                        type="button" 
+                        id="proceedBtn" 
+                        class="proceed-btn locked"
+                        onclick="proceedToGame()">
+                        Proceed To Game
+                        </button>
+                        <p id="requirementMessage" class="requirement-message"></p>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 HTML Academy. Built for learning.</p>
+    </footer>
+
+    <script>
+    let lessonCompleted = false;
+    let passedQuiz = false;
+
+    // Detect if user scrolled through the lesson
+    window.addEventListener("scroll", () => {
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.body.offsetHeight - 200;
+
+        if (scrollPosition >= pageHeight) {
+            lessonCompleted = true;
+        }
+    });
+
+    function checkQuiz() {
+        const form = document.getElementById('htmlQuiz');
+        const resultDiv = document.getElementById('quizResult');
+        let score = 0;
+
+        // Correct HTML answers
+        const answers = {
+            q1: 'a',
+            q2: 'c',
+            q3: 'b',
+            q4: 'c',
+            q5: 'a'
+        };
+
+        // Check answers
+        if (form.q1.value === answers.q1) score++;
+        if (form.q2.value === answers.q2) score++;
+        if (form.q3.value === answers.q3) score++;
+        if (form.q4.value === answers.q4) score++;
+        if (form.q5.value === answers.q5) score++;
+
+        // PERFECT SCORE
+        if (score === 5) {
+            passedQuiz = true;
+            const proceedBtn = document.getElementById("proceedBtn");
+
+            // Unlock button if lesson was studied
+            if (passedQuiz) {
+                proceedBtn.classList.remove("locked");
+                proceedBtn.classList.add("unlocked");
+            }
+
+            resultDiv.style.color = "#76ffa9";
+            resultDiv.innerHTML = "Perfect score! 5/5.";
+        } 
+        // FAILED QUIZ
+        else {
+            passedQuiz = false;
+            resultDiv.style.color = "#ff5555";
+            resultDiv.innerHTML = `FAILED. You scored ${score}/5. Please review the lesson and try again.<br>Restarting lesson... `;
+            resultDiv.style.display = "block";
+
+            // Restart lesson from the top after 1 second
+            setTimeout(() => {
+                form.reset();
+                passedQuiz = false;
+                lessonCompleted = false;
+                resultDiv.innerHTML = "";
+                resultDiv.style.display = "none";
+                document.getElementById("requirementMessage").innerHTML = "";
+
+                const proceedBtn = document.getElementById("proceedBtn");
+                proceedBtn.classList.remove("unlocked");
+                proceedBtn.classList.add("locked");
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            }, 1000);
+            return;
+        }
+        resultDiv.style.display = "block";
+    }
+
+    function proceedToGame() {
+        const requirementMessage = document.getElementById("requirementMessage");
+
+        if (passedQuiz) {
+            window.location.href = "../GamePages/html.html";
+        } else if (!passedQuiz) {
+            requirementMessage.style.color = "#ff8b56";
+            requirementMessage.innerHTML = "⚠ You must first complete the lesson to proceed to the storyline.";
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code and Play - Learn C++ Through Games</title>
+    <link rel="stylesheet" href="../css/landingpagestyle2.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    
+    <header>
+        <nav>
+            
+            <div class="logo"><h3>CODE AND PLAY</h3></div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#topics">Topics</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#join">Join</a></li>
+                <li><a href="about2.html">About Us</a></li>
+            </ul>
+            <div id="navAccount" style="margin-left:auto;position:relative;display:flex;align-items:center;gap:12px;"></div>
+        </nav>
+    </header>
+    
+    <section class="contents" id="home">
+        <h1>Master Coding Through Games</h1>
+        <p class="subtitle">Level up your programming skills by playing interactive games</p>
+        <p>Learn coding fundamentals, data structures, and algorithms while having fun. Start your coding adventure today!</p>
+        <button id="startBtn" class="btn btn-primary" style="margin-top:20px;" onclick="handleStart()">Start Playing Now</button>
+    </section>
+
+<section class="games-section" id="topics">
+    <h2>Our Learning Topics</h2>
+    <p class="section-subtitle">Expected lessons you will master after completing each game</p>
+    
+    <div class="games-grid">
+        <div class="game-card">
+            <h3>Fundamentals of C++</h3>
+            <p>Focuses on reinforcing fundamental C++ concepts and basic syntax through interactive learning.</p>
+            <span class="difficulty difficulty-beginner">Beginner</span>
+        </div>
+
+        <div class="game-card">
+            <h3>Fundamentals of Java</h3>
+            <p>Master the basics and fundamentals of Java and unlock new challenges in your java quest.</p>
+            <span class="difficulty difficulty-beginner">Beginner</span>
+        </div>
+
+        <div class="game-card">
+            <h3>Fundamentals of HTML</h3>
+            <p>Focuses on reinforcing fundamental HTML structure and essential elements through interactive learning.</p>
+            <span class="difficulty difficulty-beginner">Beginner</span>
+        </div>
+
+        <div class="game-card">
+            <h3>Fundamentals of CSS</h3>
+            <p>Enhance your skills in fundamental CSS concepts and styling techniques through interactive learning.</p>
+            <span class="difficulty difficulty-beginner">Beginner</span>
+        </div>
+    </div>
+
+<div class="cta-container column-layout">
+    <p class="section-subtitle">Ready to dive into the world of coding?</p>
+    <button class="btn" onclick="window.location.href='library.html'">Start Learning</button>
+</div>
+</section>
+
+    <section class="features" id="features">
+        <h2 class="features-title">Why Choose Code and Play?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Gamified Learning</h3>
+                <p>Stay engaged with interactive games that make coding fun and addictive. Earn points and unlock achievements.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Progressive Difficulty</h3>
+                <p>Start as a beginner and work your way to advanced topics. Each game adapts to your skill level.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Unlock Badges</h3>
+                <p>Earn achievement badges by completing challenges and milestones. Unlock new content as you progress through levels.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Comprehensive Curriculum</h3>
+                <p>Learn coding basics to advanced concepts including OOP, memory management, and optimization.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Display Achievements</h3>
+                <p>Showcase your gaming statistics and achievements on your profile. Track your learning progress over time.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" id="join">
+        <div class="cta-content">
+            <h2>Ready to Start Your Quest?</h2>
+            <p>Join thousands of coders learning C++ the fun way. Create a free account and start playing now!</p>
+            <button id="ctaBtn" class="btn btn-primary" style="margin-top:20px;" onclick="handleCTA()">Create Free Account</button>
+        </div>
+    </section>
+
+    <input type="checkbox" id="loginToggle" class="login-toggle">
+    <div class="modal-overlay login-modal">
+        <div class="modal-content">
+            <label for="loginToggle" class="close">&times;</label>
+            
+            <h2>Welcome Back</h2>
+            <p>Login to continue your coding journey.</p>
+
+            <div class="social-login">
+                <div id="googleLoginBtnContainer" style="display: flex; justify-content: center; width: 100%;"></div>
+            </div>
+
+            <div class="divider"><span>OR</span></div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label>Email or Username</label>
+                    <input type="text" id="loginUser" placeholder="Enter email or username" required>
+                </div>
+
+                <div class="form-group password-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" required>
+                    <span class="toggle-password" onclick="togglePassword('loginPassword', this)">👁️</span>
+                </div>
+
+                <p class="error-message" id="loginError"></p>
+
+                <button type="submit" class="btn btn-primary btn-submit">Login</button>
+            </form>
+
+            <p class="auth-switch">
+                Don't have an account? 
+                <span class="auth-link" onclick="switchToRegister()">Create one</span>
+            </p>
+        </div>
+    </div>
+
+    <input type="checkbox" id="registerToggle" class="register-toggle">
+    <div class="modal-overlay register-modal">
+        <div class="modal-content">
+            <label for="registerToggle" class="close">&times;</label>
+
+            <h2>Create Account</h2>
+            <p>Start your coding adventure today.</p>
+
+            <div class="social-login">
+                <div id="googleRegisterBtnContainer" style="display: flex; justify-content: center; width: 100%; margin-bottom: 10px;"></div>
+                
+            </div>
+
+            <div class="divider"><span>OR</span></div>
+
+            <form class="registration-form" id="registrationForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="form-group password-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Create a password" required>
+                    <span class="toggle-password" onclick="togglePassword('password', this)">👁️</span>
+                </div>
+
+                <div class="form-group password-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                    <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">👁️</span>
+                </div>
+
+                <p class="error-message" id="registerError"></p>
+
+                <button type="submit" class="btn btn-primary btn-submit">Create Account</button>
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <span class="auth-link" onclick="switchToLogin()">Login</span>
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Code and Play. All rights reserved.</p>
+        <p><a href="TermsandPrivacy.html">Privacy Policy</a> | <a href="TermsandPrivacy.html">Terms of Service</a> | <a href="contact.html">Contact Us</a></p>
+    </footer>
+
+<script src="../Pages.JS/landingpage2.js"></script>
+
+</body>
+</html>

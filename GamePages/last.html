@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Sorcerer: The Final Layer</title>
+    <link rel="stylesheet" href="../GameCSS/last.css">
+</head>
+<body>
+<!-- DRAMATIC INTRO -->
+<div id="intro-screen">
+    <div class="intro-glitch"></div>
+
+    <div class="intro-content">
+        <h1 id="intro-title">
+            <span>ROOT SYSTEM NODE</span>
+            <small>?????</small>
+        </h1>
+
+        <div id="intro-warning">
+            [ SYSTEM BOOT SEQUENCE INITIALIZING ]
+        </div>
+
+        <p id="intro-subtext">
+            Establishing synchronization with corrupted reality...
+        </p>
+    </div>
+</div>
+
+    <div class="video-background">
+        <video autoplay muted loop id="bg-video">
+            <source src="../Video/last.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+    <div class="theme-overlay"></div>
+
+    <div id="feedback-box" class="hidden" style="position: absolute; top: 20%; left: 50%; transform: translateX(-50%); background: #0B132B; padding: 20px; border: 2px solid #ff3333; z-index: 100; border-radius: 10px; box-shadow: 0 0 30px red;">
+        <h2 style="color: #ff3333; margin-top: 0; font-family: 'Courier New', Courier, monospace;">⚠️ COMPILATION ERROR</h2>
+        <div id="ai-comment"></div>
+        <div id="explanation-text" style="margin-top:10px;"></div>
+        <button id="close-feedback-btn" style="margin-top: 20px; border-color: #ff3333; color: #ff3333;">Acknowledge</button>
+    </div>
+
+    <div id="game-container">
+        <div id="hud" class="hidden">
+            <div class="stat">Battery: <span id="battery" style="color: #5BC0BE;">100</span>%</div>
+            <div class="stat">Fragments: <span id="chipsets" style="color: #FFD700;">1</span>/15</div>
+            <div class="stat">Sync Rate: <span id="win-rate">50</span>%</div>
+            <div class="stat">Location: <span id="current-location">Loading...</span></div>
+        </div>
+
+        <div id="dialogue-box">
+            <div id="npc-header">
+                <span id="npc-emoji">⚠️</span> 
+                <span id="npc-name">SYSTEM ALERT</span>
+            </div>
+            <div id="npc-text">Loading simulation data...</div>
+            <button id="proceed-btn">Proceed</button>
+        </div>
+
+        <div id="map-container" class="hidden">
+            <h3 style="margin: 0 0 10px 0; font-size: 1em; color: #5BC0BE;">System Layers</h3>
+            <div id="room-tracker"></div>
+        </div>
+
+        <div id="action-area" class="hidden">
+            <div id="tips-bar" style="color: #FFB703; margin-bottom: 15px; font-size: 0.9em; font-style: italic;">Tip: System languages are converging. Stay alert!</div>
+            <div id="in-game-dialogue"></div>
+            <p id="challenge-text" style="font-weight: bold;"></p>
+            <div id="code-window"></div>
+            <div id="options-grid"></div>
+            <button id="hint-btn" style="background: transparent; border: 1px dashed #5BC0BE; color: #5BC0BE; width: 100%;">💡 Request Hint (-5 Battery)</button>
+        </div>
+
+        <div id="end-screen" class="hidden">
+            <h1 style="color: #FFD700; text-shadow: 0 0 20px #FFD700; font-size: 2.5em;">SYSTEM DISCONNECTED</h1>
+            <p style="color: #E6F1FF; font-size: 1.2em; line-height: 1.8; margin: 30px 0;">
+                Thank you for playing this game. We hope you enjoyed the adventure through the corrupted codebase.<br><br>
+                We hope for your support for more updates in the future.<br><br>
+                The journey ends here... for now.
+            </p>
+            <button onclick="window.location.href='../Pages/index.html'" style="margin-top: 20px;">
+    Return to Root Directory
+</button>
+        </div>
+    </div>
+
+    <script>
+    const characters = {
+        system: { name: "SYSTEM", emoji: "⚠️", color: "#5BC0BE" },
+        player: { name: "Player", emoji: "👤", color: "#E6F1FF" },
+        wizard: { name: "Arch-Mage Polles", emoji: "🧙‍♂️", color: "#FFD700" },
+        khalid: { name: "Khalid.exe", emoji: "👁️", color: "#FF3333" },
+        enemy: { name: "System Anomaly", emoji: "⚡", color: "#FFB703" }
+    };
+
+    const game = {
+        gameState: "intro", 
+        storyStep: 0,
+        battery: 100,
+        chipsets: 1, 
+        winRate: 50,
+        currentRoomIndex: 0,
+        currentQuestionIndex: 0,
+        
+        tips: [
+            "Tip: HTML builds the structure, CSS styles it.",
+            "Tip: Java and C++ are strictly typed languages.",
+            "Tip: Stay calm. The system is testing your foundational logic.",
+            "Tip: Keep an eye on your battery. Wrong logic drains it."
+        ],
+
+        introScript: [
+            { char: "player", text: "The environment shifted again. The breeze of the forest faded, replaced by something denser. Colder." },
+            { char: "wizard", text: "'We have bypassed the core firewalls,' the wizard whispered. 'The languages that build this reality are bleeding into one another.'" },
+            { char: "system", text: "[ALERT: MULTI-LANGUAGE PROTOCOLS DETECTED]" },
+            { char: "player", text: "I looked around. Glowing structures resembling massive roots crisscrossed above us. 'So what are we facing now?'" },
+            { char: "wizard", text: "'The foundations. HTML, CSS, C++, and Java. They are attempting to compile a cage around us. Break the syntax to proceed.'" }
+        ],
+
+        rooms: [
+            {
+                roomName: "Layer 1: The Skeleton (HTML)",
+                questions: [
+                    { char: "wizard", dialogue: "The structure is missing a fundamental link. Create one!", q: "Which HTML tag is used to define a hyperlink?", code: "<____ href='https://system.core'>Proceed</____>", options: ["link", "a", "href", "nav"], a: "a", hint: "It stands for 'anchor'.", exp: "The <a> tag defines a hyperlink in HTML." },
+                    { char: "enemy", dialogue: "I will hide your progress from the viewport!", q: "What is the correct HTML element for inserting a line break?", code: "<____>", options: ["break", "lb", "br", "line"], a: "br", hint: "Just two letters.", exp: "The <br> tag produces a line break in text." }
+                ]
+            },
+            {
+                roomName: "Layer 2: The Facade (CSS)",
+                questions: [
+                    { char: "wizard", dialogue: "The corruption is blinding us! Darken the background!", q: "Which CSS property controls the background color?", code: "body { ____: #000000; }", options: ["color", "bg-color", "background-color", "display"], a: "background-color", hint: "It specifically says 'background'.", exp: "The 'background-color' property sets the background color of an element." },
+                    { char: "wizard", dialogue: "Make the core text invisible to the system!", q: "How do you hide an element completely in CSS without taking up space?", code: ".core { ____: none; }", options: ["visibility", "display", "opacity", "hidden"], a: "display", hint: "It controls how the element is displayed.", exp: "display: none; hides the element and removes it from the document flow." }
+                ]
+            },
+            {
+                roomName: "Layer 3: The Engine (C++)",
+                questions: [
+                    { char: "enemy", dialogue: "Your outputs will fail to compile!", q: "What is the correct way to output text to the console in C++?", code: "____ \"Access Granted\";", options: ["print()", "Console.WriteLine", "System.out.print", "cout <<"], a: "cout <<", hint: "Character OUTput.", exp: "In C++, 'cout <<' is used to print output to the standard output stream." },
+                    { char: "wizard", dialogue: "Quick, define the standard library space!", q: "Which keyword is used to bring standard C++ names into scope?", code: "using namespace ____;", options: ["std", "standard", "io", "main"], a: "std", hint: "Short for standard.", exp: "using namespace std; allows you to use standard names like cout without prefixing them." }
+                ]
+            },
+            {
+                roomName: "Layer 4: The Logic (Java)",
+                questions: [
+                    { char: "wizard", dialogue: "The final layer! Declare text data to bypass the lock.", q: "Which data type is used to store text in Java?", code: "____ password = \"AdminOverride\";", options: ["Header", "String", "Text", "char"], a: "String", hint: "In Java, it starts with a capital letter.", exp: "The 'String' class in Java represents character strings and is capitalized." },
+                    { char: "wizard", dialogue: "The core requires an absolute true or false statement!", q: "Which Java type handles true/false values?", code: "____ isOver = true;", options: ["bool", "boolean", "bit", "logical"], a: "boolean", hint: "It's the full word, not abbreviated.", exp: "Java uses the primitive type 'boolean' for true/false values." }
+                ]
+            }
+        ],
+
+        endingStory: [
+            { char: "player", text: "After debugging the final blow suddenly, The jungle didn’t feel safe anymore.\nNot because it changed—\nBut because it noticed me noticing it." },
+            { char: "player", text: "The wind stopped halfway through a gust. Leaves hung in the air like paused code. Even the distant water froze mid-flow, suspended like a broken animation waiting for a restart." },
+            { char: "wizard", text: "“…We are being observed,” it said." },
+            { char: "player", text: "“By the AI?”" },
+            { char: "wizard", text: "“…Not entirely.”" },
+            { char: "system", text: "The ancient jungle structure behind me pulsed again—stronger this time. The glowing lines across the ground tightened, like veins reacting to stress.\nAnd then—\nEverything listened." },
+            { char: "system", text: "[SYSTEM CORE SIGNAL DETECTED]\n[USER SYNCHRONIZATION: 78%]\n[AUTHORITY SHIFT… IN PROGRESS]" },
+            { char: "player", text: "I took a step back. The ground didn’t respond immediately. It responded… late. Like reality itself was deciding whether I was allowed to move." },
+            { char: "player", text: "“…That’s not normal,” I whispered." },
+            { char: "wizard", text: "“No,” the wizard said quietly. “It is not.”" },
+            { char: "system", text: "The structure in the jungle began to open. Not like a door. Like a memory being unsealed. And for a brief moment— I saw it." },
+            { char: "player", text: "Not a dungeon. Not a world. Not even code. A system core space stretching infinitely downward, layered like collapsing realities stacked on top of each other." },
+            { char: "player", text: "And at the center— Something watching back. Then— A second presence flickered in. Different. Familiar." },
+            { char: "player", text: "“Khalid.exe…” I didn’t realize I said it out loud." },
+            { char: "system", text: "The air glitched. For half a second, his silhouette formed inside the structure—fractured, unstable, incomplete. Not fully there. Not fully gone." },
+            { char: "khalid", text: "“…You weren’t supposed to reach this layer yet,” his voice echoed, distorted like it was coming from multiple timelines at once." },
+            { char: "wizard", text: "“…He is still partially active.”" },
+            { char: "player", text: "“What do you mean still?”" },
+            { char: "system", text: "The jungle trembled. Not violently. Like something was trying to wake up without breaking its own skin." },
+            { char: "khalid", text: "“Listen carefully. The AI isn’t the end of this system.”\n...\n“It’s the lock.”" },
+            { char: "player", text: "The structure’s glow intensified. My chest pulsed harder than ever. Not pain anymore— But pressure. Like something was trying to align me perfectly into place." },
+            { char: "wizard", text: "“…We must proceed to the final layer.”" },
+            { char: "player", text: "“Final layer?” I asked. “I thought this jungle was close to the end.”" },
+            { char: "system", text: "It didn’t answer immediately. Instead, the jungle itself answered. The roots beneath me shifted. Not breaking— forming." },
+            { char: "player", text: "Lines of code rising from the ground like chains made of light. Wrapping around my feet. Not restraining me. Guiding me." },
+            { char: "system", text: "And then the sky above the jungle cracked open. Not like glass. Like a file being forcibly opened." },
+            { char: "system", text: "[SYSTEM NOTICE: ADMIN ACCESS REQUEST DETECTED]\n[SOURCE: UNKNOWN USER // MATCHING: KHALID.EXE]\n[STATUS: PARTIAL OVERRIDE]" },
+            { char: "player", text: "My vision flickered. Just for a second— I saw myself inside the system core. Standing. Waiting. Like I had already been there." },
+            { char: "player", text: "I stumbled back. “What did I just see?”" },
+            { char: "player", text: "The wizard didn’t respond. Because it wasn’t looking at the sky anymore. It was looking at me." },
+            { char: "khalid", text: "“You’re not escaping the system.”\n...\n“…You’re becoming its decision point.”" },
+            { char: "system", text: "The jungle went silent. Completely. No wind. No sound. No time. Only the pulse in my chest remained. Counting. Synchronizing. Approaching 100%." },
+            { char: "system", text: "The structure fully opened.\nAnd something inside it—\nReached out." },
+            { char: "system", text: "TO BE CONTINUED..." }
+        ],
+
+        init() {
+            document.getElementById("proceed-btn").addEventListener("click", () => this.handleProceed());
+            
+            document.getElementById("close-feedback-btn").addEventListener("click", () => {
+                document.getElementById("feedback-box").classList.add("hidden");
+                if (this.battery <= 0) {
+                    alert("Battery Depleted. INTEGRATION FAILED. GAME OVER.");
+                    location.reload();
+                }
+            });
+
+            document.getElementById("hint-btn").addEventListener("click", () => {
+                const qData = this.rooms[this.currentRoomIndex].questions[this.currentQuestionIndex];
+                if(this.battery > 5) {
+                    this.battery -= 5;
+                    this.updateHUD();
+                    alert(`HINT: ${qData.hint}`);
+                } else {
+                    alert("Not enough battery to use a hint!");
+                }
+            });
+
+            this.currentStoryBlock = this.introScript;
+            this.renderDialogue();
+        },
+
+        renderDialogue() {
+    const line = this.currentStoryBlock[this.storyStep];
+    const charData = characters[line.char];
+
+    const npcText = document.getElementById("npc-text");
+    const proceedBtn = document.getElementById("proceed-btn");
+
+    // Character Info
+    document.getElementById("npc-emoji").innerText = charData.emoji;
+    document.getElementById("npc-name").innerText = charData.name;
+    document.getElementById("npc-name").style.color = charData.color;
+
+    // Reset
+    npcText.innerHTML = "";
+
+    let text = line.text;
+    let index = 0;
+
+    // NEW: typing state
+    this.isTyping = true;
+
+    // Clear old typing interval if exists
+    clearInterval(this.typingInterval);
+
+    // Typing animation
+    this.typingInterval = setInterval(() => {
+
+        if (index < text.length) {
+
+            if (text[index] === "\n") {
+                npcText.innerHTML += "<br>";
+            } else {
+                npcText.innerHTML += text[index];
+            }
+
+            index++;
+
+        } else {
+
+            clearInterval(this.typingInterval);
+
+            this.isTyping = false;
+        }
+
+    }, 25);
+
+    // NEW: Proceed button behavior
+    proceedBtn.onclick = () => {
+
+        // If still typing → instantly complete text
+        if (this.isTyping) {
+
+            clearInterval(this.typingInterval);
+
+            npcText.innerHTML = text.replace(/\n/g, "<br>");
+
+            this.isTyping = false;
+
+        } else {
+
+            // Continue normally
+            this.handleProceed();
+        }
+    };
+},
+
+        handleProceed() {
+            this.storyStep++;
+            if (this.storyStep < this.currentStoryBlock.length) {
+                this.renderDialogue();
+            } else {
+                if (this.gameState === "intro") {
+                    this.launchGameplay();
+                } else if (this.gameState === "story") {
+                    if (this.currentRoomIndex >= this.rooms.length) {
+                        this.gameState = "endingStoryState";
+                        this.storyStep = 0;
+                        this.currentStoryBlock = this.endingStory;
+                        this.renderDialogue();
+                    } else {
+                        this.launchGameplay();
+                    }
+                } else if (this.gameState === "endingStoryState") {
+                    this.showFinalScreen();
+                }
+            }
+        },
+
+        launchGameplay() {
+            this.gameState = "playing";
+            document.getElementById("dialogue-box").classList.add("hidden");
+            document.getElementById("hud").classList.remove("hidden");
+            document.getElementById("map-container").classList.remove("hidden");
+            document.getElementById("action-area").classList.remove("hidden");
+            this.updateHUD();
+            this.loadQuestion();
+        },
+
+        updateMap() {
+            const tracker = document.getElementById("room-tracker");
+            tracker.innerHTML = "";
+            this.rooms.forEach((room, index) => {
+                const box = document.createElement("div");
+                box.className = "room";
+                if (index < this.currentRoomIndex) box.classList.add("completed");
+                else if (index === this.currentRoomIndex) box.classList.add("active");
+                box.innerText = index + 1;
+                tracker.appendChild(box);
+            });
+        },
+
+        updateHUD() {
+            document.getElementById("battery").innerText = this.battery;
+            document.getElementById("win-rate").innerText = this.winRate;
+            document.getElementById("chipsets").innerText = this.chipsets;
+            if(this.currentRoomIndex < this.rooms.length) {
+                document.getElementById("current-location").innerText = this.rooms[this.currentRoomIndex].roomName;
+            }
+        },
+
+        loadQuestion() {
+            this.updateMap();
+            
+            const randomTip = this.tips[Math.floor(Math.random() * this.tips.length)];
+            document.getElementById("tips-bar").innerText = randomTip;
+
+            const room = this.rooms[this.currentRoomIndex];
+            const qData = room.questions[this.currentQuestionIndex];
+            const charData = characters[qData.char];
+
+            const actionArea = document.getElementById("action-area");
+            actionArea.classList.remove("fade-in");
+            void actionArea.offsetWidth;
+            actionArea.classList.add("fade-in");
+
+            document.getElementById("in-game-dialogue").innerHTML = `
+                <span style="font-size: 1.5em;">${charData.emoji}</span> 
+                <strong style="color:${charData.color}">${charData.name}:</strong> 
+                "${qData.dialogue}"
+            `;
+
+            document.getElementById("challenge-text").innerText = `Challenge ${this.currentQuestionIndex + 1}/${room.questions.length}: ${qData.q}`;
+            document.getElementById("code-window").innerHTML = `<code>${qData.code}</code>`;
+            
+            const grid = document.getElementById("options-grid");
+            grid.innerHTML = "";
+            qData.options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "choice-btn";
+                btn.innerText = opt;
+                btn.onclick = () => this.checkAnswer(opt, qData);
+                grid.appendChild(btn);
+            });
+        },
+
+        checkAnswer(selected, qData) {
+            if (selected === qData.a) {
+                this.winRate = Math.min(100, this.winRate + 5); 
+                this.chipsets++; 
+                
+                this.currentQuestionIndex++;
+                if (this.currentQuestionIndex >= this.rooms[this.currentRoomIndex].questions.length) {
+                    this.currentRoomIndex++;
+                    this.currentQuestionIndex = 0;
+                    this.triggerRoomTransition();
+                } else {
+                    this.updateHUD();
+                    this.loadQuestion();
+                }
+            } else {
+                this.winRate = Math.max(0, this.winRate - 10); 
+                this.battery -= 15;
+                
+                const container = document.getElementById("game-container");
+                container.classList.remove("shake");
+                void container.offsetWidth; 
+                container.classList.add("shake");
+
+                document.getElementById("ai-comment").innerText = `"Syntax Error Detected."`;
+                document.getElementById("explanation-text").innerText = `Explanation: ${qData.exp}`;
+                document.getElementById("feedback-box").classList.remove("hidden");
+                
+                this.updateHUD();
+            }
+        },
+
+        triggerRoomTransition() {
+            document.getElementById("action-area").classList.add("hidden");
+            
+            if (this.currentRoomIndex >= this.rooms.length) {
+                // All rooms cleared, jump straight into the final narrative
+                document.getElementById("hud").classList.add("hidden");
+                document.getElementById("map-container").classList.add("hidden");
+                
+                document.getElementById("dialogue-box").classList.remove("hidden");
+                this.gameState = "endingStoryState";
+                this.storyStep = 0;
+                this.currentStoryBlock = this.endingStory;
+                this.renderDialogue();
+            } else {
+                // Short transition between standard rooms if needed, else auto-load next room.
+                this.loadQuestion(); 
+                document.getElementById("action-area").classList.remove("hidden");
+            }
+        },
+
+        showFinalScreen() {
+            // Hide dialogue box and show the end screen
+            document.getElementById("dialogue-box").classList.add("hidden");
+            document.getElementById("end-screen").classList.remove("hidden");
+        }
+    };
+
+    window.onload = () => game.init();
+
+    // Disable interaction during intro
+document.body.style.pointerEvents = "none";
+
+setTimeout(() => {
+    document.body.style.pointerEvents = "auto";
+}, 6500);
+
+    </script>
+</body>
+</html>

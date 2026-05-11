@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Fundamentals</title>
+    <link rel="stylesheet" href="../Lesson Styling/lesson-c++.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Press+Start+2P&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo"><h3>CODE AND PLAY // C++ FUNDAMENTALS</h3></div>
+            <ul>
+                <li><a href="#intro">Intro</a></li>
+                <li><a href="#syntax">Syntax</a></li>
+                <li><a href="#variables">Variables</a></li>
+                <li><a href="#control">Control Flow</a></li>
+                <li><a href="#functions">Functions</a></li>
+                <li><a href="#arrays">Arrays & Strings</a></li>
+                <li><a href="#pointers">Pointers</a></li>
+                <li><a href="#structs">Structs</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero contents" id="intro">
+            <h1>Master C++</h1>
+            <p class="subtitle">You must first understand the fundamentals of C++ before diving into the storyline.</p>
+        </section>
+
+        <!-- Topic 1: Syntax -->
+        <section class="container lesson-section" id="syntax">
+            <h2 class="section-title">1. The Basic Boilerplate</h2>
+            <p class="section-subtitle">Every C++ program starts with a foundational structure. Here is the classic "Hello World".</p>
+            
+            <div class="code-card">
+<pre><code>#include &lt;iostream&gt;
+
+int main() {
+    std::cout &lt;&lt; "Hello, World!" &lt;&lt; std::endl;
+    return 0;
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>#include &lt;iostream&gt;</h3>
+                    <p>A preprocessor directive that includes the standard input-output stream library, allowing you to print text.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>int main()</h3>
+                    <p>The main function where program execution begins. It returns an integer (0) upon successful completion.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>std::cout</h3>
+                    <p>The standard character output device (usually the screen). The <code>&lt;&lt;</code> operator sends data to it.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 2: Variables & Data Types -->
+        <section class="container lesson-section" id="variables">
+            <h2 class="section-title">2. Variables & Data Types</h2>
+            <p class="section-subtitle">C++ is strongly typed, meaning you must declare the type of a variable before using it to store data.</p>
+            
+            <div class="code-card">
+<pre><code>int level = 5;               // Integer (whole numbers)
+double health = 99.5;        // Double (floating-point numbers)
+char rank = 'A';             // Character (single letter)
+bool isGameOver = false;     // Boolean (true or false)</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Numeric Types</h3>
+                    <p>Use <code>int</code> for standard whole numbers and <code>double</code> or <code>float</code> when you need decimal precision.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>char</h3>
+                    <p>Stores a single character. It is always surrounded by single quotes (e.g., <code>'Z'</code>).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>bool</h3>
+                    <p>Represents a boolean truth value. It can only evaluate to <code>true</code> (1) or <code>false</code> (0).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 3: Control Flow -->
+        <section class="container lesson-section" id="control">
+            <h2 class="section-title">3. Control Flow</h2>
+            <p class="section-subtitle">Direct the logic of your program using conditional statements and loops.</p>
+            
+            <div class="code-card">
+<pre><code>int score = 85;
+
+// Conditional Statement
+if (score >= 90) {
+    std::cout &lt;&lt; "Excellent!" &lt;&lt; std::endl;
+} else if (score >= 75) {
+    std::cout &lt;&lt; "Passed!" &lt;&lt; std::endl;
+} else {
+    std::cout &lt;&lt; "Keep trying!" &lt;&lt; std::endl;
+}
+
+// Loop Statement
+for (int i = 1; i <= 3; i++) {
+    std::cout &lt;&lt; "Spawning enemy " &lt;&lt; i &lt;&lt; std::endl;
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>if / else if / else</h3>
+                    <p>Allows your program to make decisions and execute different blocks of code based on whether a condition is true or false.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>for loop</h3>
+                    <p>Used to repeat a specific block of code a known number of times. Contains an initialization, a condition, and an increment.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>while loop</h3>
+                    <p>Repeats a block of code as long as a specified condition remains true. Useful when the number of iterations is unknown.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 4: Functions -->
+        <section class="container lesson-section" id="functions">
+            <h2 class="section-title">4. Functions</h2>
+            <p class="section-subtitle">Reusable blocks of code designed to perform a specific task. They help keep your code organized and modular.</p>
+            
+            <div class="code-card">
+<pre><code>// Function Declaration & Definition
+int addNumbers(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    // Function Call
+    int result = addNumbers(10, 5);
+    std::cout &lt;&lt; "The sum is: " &lt;&lt; result;
+    return 0;
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Return Type</h3>
+                    <p>Specifies what type of data the function sends back (e.g., <code>int</code>, <code>string</code>). Use <code>void</code> if it returns nothing.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Parameters</h3>
+                    <p>Variables passed into the function (like <code>int a, int b</code>) so it has the data it needs to operate.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 5: Arrays & Strings -->
+        <section class="container lesson-section" id="arrays">
+            <h2 class="section-title">5. Arrays & Strings</h2>
+            <p class="section-subtitle">Store multiple items of the same data type sequentially, or handle text efficiently using the string library.</p>
+            
+            <div class="code-card">
+<pre><code>#include &lt;string&gt;
+using namespace std;
+
+// Array of integers
+int nums[5] = {10, 20, 30, 40, 50};
+cout &lt;&lt; "First number: " &lt;&lt; nums[0] &lt;&lt; endl; // Outputs 10
+
+// String manipulation
+string text = "C++ Programming";
+cout &lt;&lt; "Length: " &lt;&lt; text.length();</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Arrays</h3>
+                    <p>A fixed-size sequence of elements of the same type. Accessed using a zero-based index (e.g., <code>nums[0]</code>).</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Strings</h3>
+                    <p>Use <code>#include &lt;string&gt;</code> to easily create and manipulate text. Includes helpful built-in functions like <code>.length()</code>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 6: Pointers & References -->
+        <section class="container lesson-section" id="pointers">
+            <h2 class="section-title">6. Pointers & References</h2>
+            <p class="section-subtitle">Interact directly with memory addresses for dynamic allocation and passing variables efficiently.</p>
+            
+            <div class="code-card">
+<pre><code>int x = 10;
+
+// Pointer
+int *ptr = &x; 
+cout &lt;&lt; "Memory Address: " &lt;&lt; ptr &lt;&lt; endl;
+cout &lt;&lt; "Value: " &lt;&lt; *ptr &lt;&lt; endl;
+
+// Pass by Reference Function
+void changeValue(int &val) {
+    val = 100;
+}</code></pre>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Address Operator (&)</h3>
+                    <p>Retrieves the exact memory address of a variable in the computer's RAM.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Dereference Operator (*)</h3>
+                    <p>Used to access or modify the actual value stored at the memory address the pointer is holding.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>References</h3>
+                    <p>Acts as an alias for an existing variable. Passing by reference allows functions to modify the original variable directly.</p>
+                </div>
+            </div>
+        </section>
+
+<!-- Topic 7: Structs -->
+<section class="container lesson-section" id="structs">
+
+    <h2 class="section-title">7. Structs</h2>
+
+    <p class="section-subtitle">
+        Structs allow you to group multiple related variables together into one custom data type.
+    </p>
+
+    <div class="code-card">
+<pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+// Define a struct
+struct Player {
+
+    string name;
+    int hp;
+    int level;
+
+};
+
+int main() {
+
+    // Create a player object
+    Player hero;
+
+    hero.name = "Knight";
+    hero.hp = 100;
+    hero.level = 5;
+
+    cout &lt;&lt; hero.name &lt;&lt; endl;
+    cout &lt;&lt; hero.hp &lt;&lt; endl;
+    cout &lt;&lt; hero.level &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+    </div>
+
+    <div class="features-grid">
+
+        <div class="feature-card">
+            <h3>Struct</h3>
+            <p>
+                A custom data type that groups related variables together.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Members</h3>
+            <p>
+                Variables inside a struct are called members.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Dot Operator</h3>
+            <p>
+                Use the dot operator to access struct members like
+                <code>hero.hp</code>.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- Quiz Section -->
+        <section class="quiz-container" id="quiz">
+            <h2>Knowledge Check</h2>
+            <p class="subtitle">Test your understanding of the C++ basics and advanced concepts.</p>
+            
+            <div class="quiz-card">
+                <form id="cppQuiz">
+                    <!-- Question 1 -->
+                    <div class="question-block">
+                        <p class="question-text">1. Which preprocessor directive is used to enable input and output operations?</p>
+                        <label><input type="radio" name="q1" value="a"> #include &lt;stdio.h&gt;</label>
+                        <label><input type="radio" name="q1" value="b"> #include &lt;iostream&gt;</label>
+                        <label><input type="radio" name="q1" value="c"> #include &lt;io.h&gt;</label>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-block">
+                        <p class="question-text">2. What is the entry point of every C++ program?</p>
+                        <label><input type="radio" name="q2" value="a"> start()</label>
+                        <label><input type="radio" name="q2" value="b"> init()</label>
+                        <label><input type="radio" name="q2" value="c"> main()</label>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-block">
+                        <p class="question-text">3. Which operator is used with <code>std::cout</code> to print to the screen?</p>
+                        <label><input type="radio" name="q3" value="a"> &gt;&gt;</label>
+                        <label><input type="radio" name="q3" value="b"> &lt;&lt;</label>
+                        <label><input type="radio" name="q3" value="c"> ::</label>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-block">
+                        <p class="question-text">4. Which operator is used to get the memory address of a variable?</p>
+                        <label><input type="radio" name="q4" value="a"> &amp;</label>
+                        <label><input type="radio" name="q4" value="b"> *</label>
+                        <label><input type="radio" name="q4" value="c"> %</label>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-block">
+                        <p class="question-text">5. What keyword is used to start a struct definition?</p>
+                        <label><input type="radio" name="q5" value="a"> struct</label>
+                        <label><input type="radio" name="q5" value="b"> object</label>
+                        <label><input type="radio" name="q5" value="c"> class</label>
+                    </div>
+
+                    <button type="button" class="btn" onclick="checkQuiz()">Submit Answers</button>
+                    
+                    <div id="quizResult" class="result-message"></div>
+                    <!-- Proceed Section -->
+<div class="proceed-area">
+
+
+
+    <button 
+    type="button" 
+    id="proceedBtn" 
+    class="proceed-btn locked"
+    onclick="proceedToGame()">
+    Proceed To Game
+    </button>
+
+    <p id="requirementMessage" class="requirement-message"></p>
+
+</div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 C++ Academy. Built for learning.</p>
+    </footer>
+
+    <!-- Script to grade the updated quiz -->
+    <script>
+
+    let lessonCompleted = false;
+    let passedQuiz = false;
+
+    // Detect if user scrolled through the lesson
+    window.addEventListener("scroll", () => {
+
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.body.offsetHeight - 200;
+
+        if (scrollPosition >= pageHeight) {
+            lessonCompleted = true;
+        }
+    });
+
+function checkQuiz() {
+
+    const form = document.getElementById('cppQuiz');
+    const resultDiv = document.getElementById('quizResult');
+
+    let score = 0;
+
+    // Correct answers
+    const answers = {
+        q1: 'b',
+        q2: 'c',
+        q3: 'b',
+        q4: 'a',
+        q5: 'a'
+    };
+
+    // Check answers
+    if (form.q1.value === answers.q1) score++;
+    if (form.q2.value === answers.q2) score++;
+    if (form.q3.value === answers.q3) score++;
+    if (form.q4.value === answers.q4) score++;
+    if (form.q5.value === answers.q5) score++;
+
+    // PERFECT SCORE
+    if (score === 5) {
+
+        passedQuiz = true;
+
+        const proceedBtn = document.getElementById("proceedBtn");
+
+// Unlock button if lesson was studied
+if (passedQuiz) {
+
+    proceedBtn.classList.remove("locked");
+    proceedBtn.classList.add("unlocked");
+
+}
+
+        resultDiv.style.color = "#76ffa9";
+
+        resultDiv.innerHTML =
+            "Perfect score! 5/5.";
+
+    }
+
+    // FAILED QUIZ
+    else {
+
+        passedQuiz = false;
+
+        resultDiv.style.color = "#ff5555";
+
+        resultDiv.innerHTML =
+            `FAILED. You scored ${score}/5. Please review the lesson and try again.<br>
+            Restarting lesson... `;
+
+        resultDiv.style.display = "block";
+
+// Restart lesson from the top after 3 seconds
+setTimeout(() => {
+
+    // Clear quiz selections
+    form.reset();
+
+    // Reset progress
+    passedQuiz = false;
+    lessonCompleted = false;
+
+    // Clear messages
+    resultDiv.innerHTML = "";
+    resultDiv.style.display = "none";
+
+    document.getElementById("requirementMessage").innerHTML = "";
+
+    // Lock button again
+const proceedBtn = document.getElementById("proceedBtn");
+
+proceedBtn.classList.remove("unlocked");
+proceedBtn.classList.add("locked");
+
+    // Scroll back to top
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}, 1000);
+
+        return;
+    }
+
+    resultDiv.style.display = "block";
+}
+
+    function proceedToGame() {
+
+        const requirementMessage =
+            document.getElementById("requirementMessage");
+
+        // REQUIREMENTS COMPLETE
+        if (passedQuiz) {
+
+            window.location.href = "../GamePages/c++.html";
+
+        }
+
+
+        // QUIZ NOT PASSED
+        else if (!passedQuiz) {
+
+            requirementMessage.style.color = "#ff8b56";
+
+            requirementMessage.innerHTML =
+                "⚠ You must first complete the lesson to proceed to the storyline.";
+
+        }
+
+    }
+
+</script>
+</body>
+</html>
